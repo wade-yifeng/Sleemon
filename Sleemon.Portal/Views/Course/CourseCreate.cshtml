@@ -1,0 +1,401 @@
+﻿@using Sleemon.Common
+@model Sleemon.Data.LearningCourseDetailModel
+
+<form class="form-horizontal" action='@Url.Action("CreateCourse", "Course")' method="post" id="courseForm">
+    <div class="notice_edit col-xs-12 col-sm-8">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4 class="widget-title">新增/编辑 课程</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <fieldset>
+                        <legend>基本信息</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">课程名称</label>
+                            <div class="col-sm-10">
+                                @Html.HiddenFor(u => u.Status, new { id = "courseStatus" })
+                                @Html.HiddenFor(u => u.Id)
+                                @Html.TextBoxFor(u => u.Subject, new { @class = "form-control", placeholder = "输入课程名称...最多50个字", maxlength = "50" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">描述</label>
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(u => u.Description, new { @class = "form-control", placeholder = "最多250个字", maxlength = "250" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">难度</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(u => u.Star, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">适合等级</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(u => u.ForLevel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions center">
+                        <button type="button" class="btn btn-primary btn-sm addChapter">添加章节</button>
+                    </div>
+                    @if (Model != null && Model.Chapters != null)
+                    {
+                        for (int i = 0; i < Model.Chapters.Count; i++)
+                        {
+                            var chapter = Model.Chapters[i];
+                            <fieldset class="chapter">
+                                <legend class="chapter_index">
+                                    第@(i + 1)章
+                                </legend>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">章节名：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="Chapters[@i].Title" class="form-control" placeholder="请输入章节名, 100字以内" value="@chapter.Title" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">描述：</label>
+                                    <div class="col-sm-10">
+                                        <textarea name="Chapters[@i].Description" class="form-control" rows="2" cols="20">@chapter.Description</textarea>
+                                    </div>
+                                </div>
+                                @for (int j = 0; j < chapter.Files.Count; j++)
+                                {
+                                    var file = chapter.Files[j];
+                                    var word = file.FileType == (byte) FileType.Word;
+                                    var video = file.FileType == (byte)FileType.Video;
+                                    <div class="form-group file">
+                                        <label class="col-sm-2 control-label file_index">第@(j + 1)节</label>
+                                        <div class="col-sm-9">
+                                            <div class="form-group">
+                                                <label class=" col-sm-2 control-label">
+                                                    标题：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input name="Chapters[@i].Files[@j].Subject" class="form-control" type="text" value="@file.Subject" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class=" col-sm-2 control-label">
+                                                    描述：
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <textarea name="Chapters[@i].Files[@j].Description" class="form-control" rows="2" cols="20">@file.Description</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class=" col-sm-2 control-label">
+                                                    课件：
+                                                </label>
+                                                <div class="col-sm-5">
+                                                    <label class=" col-sm-8 control-label">
+                                                        @Sleemon.Common.EnumHelper.GetEnumDescription(FileType.Video)
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <input name="Chapters[@i].Files[@j].FileType" class="form-control" type="radio" value="@((byte) FileType.Video)" checked="@video"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <label class=" col-sm-8 control-label">
+                                                        @Sleemon.Common.EnumHelper.GetEnumDescription(FileType.Word)
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <input name="Chapters[@i].Files[@j].FileType" class="form-control" type="radio" value="@((byte) FileType.Word)" checked="@word" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class=" col-sm-2 control-label">
+                                                    上传：
+                                                </label>
+                                                <div class="col-sm-10 input-group">
+                                                    <input name="Chapters[@i].Files[@j].Content" class="form-control" type="text" value="@file.Content" />
+                                                    <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default btn-lg uploadFile">上传</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <button type="button" class="btn btn-link delFile">删除</button>
+                                        </div>
+                                    </div>
+                                }
+                                <button type="button" class="btn btn-primary btn-xs addFile">添加新节</button>
+                                <button type="button" class="btn btn-primary btn-xs delChapter">删除本章</button>
+                            </fieldset>
+                            <br />
+                        }
+                    }
+                    <div class="form-actions center" id="submitDiv">
+                        <button type="submit" id="btnSave" class="btn btn-sm btn-success">
+                            保存
+                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                        </button>
+                        <button type="submit" id="btnPublish" class="btn btn-sm btn-success">
+                            发布
+                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="tempFile">
+    <div class="form-group file">
+        <label class="col-sm-2 control-label file_index">第1节</label>
+        <div class="col-sm-9">
+            <div class="form-group">
+                <label class=" col-sm-2 control-label">
+                    标题：
+                </label>
+                <div class="col-sm-10">
+                    <input name="Chapters[99].Files[99].Subject" class="form-control" type="text" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class=" col-sm-2 control-label">
+                    描述：
+                </label>
+                <div class="col-sm-10">
+                    <textarea name="Chapters[99].Files[99].Description" class="form-control" rows="2" cols="20"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class=" col-sm-2 control-label">
+                    课件：
+                </label>
+                <div class="col-sm-5">
+                    <label class=" col-sm-8 control-label">
+                        @Sleemon.Common.EnumHelper.GetEnumDescription(FileType.Video)
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="Chapters[99].Files[99].FileType" class="form-control" type="radio" value="@((byte) FileType.Video)" checked="checked" />
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <label class=" col-sm-8 control-label">
+                        @Sleemon.Common.EnumHelper.GetEnumDescription(FileType.Word)
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="Chapters[99].Files[99].FileType" class="form-control" type="radio" value="@((byte) FileType.Word)"  />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class=" col-sm-2 control-label">
+                    上传：
+                </label>
+                <div class="col-sm-10 input-group">
+                    <input name="Chapters[99].Files[99].Content" class="form-control" type="text" value="" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-lg uploadFile">上传</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-link delFile">删除</button>
+        </div>
+    </div>
+</div>
+<div id="tempChapter">
+    <fieldset class="chapter">
+        <legend class="chapter_index">
+            第1章
+        </legend>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">章节名：</label>
+            <div class="col-sm-10">
+                <input type="text" name="Chapters[99].Title" class="form-control" placeholder="请输入章节名, 100字以内" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">描述：</label>
+            <div class="col-sm-10">
+                <textarea name="Chapters[99].Description" class="form-control" rows="2" cols="20"></textarea>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-xs addFile">添加新节</button>
+        <button type="button" class="btn btn-primary btn-xs delChapter">删除本章</button>
+    </fieldset>
+    <br/>
+</div>
+
+ <!-- 加载编辑器的容器 -->
+
+<script id="container" name="content" type="text/plain">
+</script>
+
+<script type="text/javascript" language="javascript">
+    var contentInput;
+
+    var ue = UE.getEditor('container', {
+        autoHeightEnabled: false
+    });
+
+    ue.ready(function () {
+        ue.hide();
+        ue.addListener('afterInsertVideo', function (t, arg) {
+            if (contentInput) {
+                contentInput.val(arg[0].url);
+            }
+        });
+    });
+    
+    $(document)
+        .ready(function () {
+            $('#tempFile').hide();
+            $('#tempChapter').hide();
+
+            $('#btnSave')
+                .click(function() {
+                    $('#courseStatus').val(1);
+                    $('#btnSave').submit();
+                    return false;
+                });
+
+            $('#btnPublish')
+                .click(function () {
+                    $('#courseStatus').val(2);
+                    submitForm();
+                    return false;
+                });
+
+            function submitForm() {
+                $.ajax({
+                    type: "POST",
+                    url: "/Course/CreateCourse",
+                    data: $("#courseForm").serialize(),
+                    cache: false,
+                    success: function (data) {
+                        $(".col-content").html(data);
+                    },
+                    error: function (err) {
+                        return alert('提交失败');
+                    }
+                });
+            }
+
+            $('div.widget-main')
+            .on('click',
+                '.uploadFile',
+                function () {
+                    contentInput = $(this).parent().prev();
+                    var videoDialog = 
+                        .getDialog('insertvideo');
+                    videoDialog.open();
+                });
+
+            $('div.widget-main')
+                .on('click',
+                    '.delFile',
+                    function () {
+                        $(this)
+                            .parent()
+                            .parent()
+                            .siblings('.file')
+                            .each(function (i) {
+                                $(this).children('.file_index')[0].innerText = '第' + (i + 1) + '节：';
+
+                                var node = $(this).children().children().children();
+                                [node, node.children()].forEach(function (item) {
+                                    item.children('[name^=Chapters]')
+                                        .each(function () {
+                                            var start = $(this)[0].name.indexOf('Files[');
+                                            var end = $(this)[0].name.lastIndexOf(']');
+                                            $(this)[0].name = $(this)[0].name.substring(0, start) +
+                                                'Files[' +
+                                                i +
+                                                $(this)[0].name.substring(end);
+                                        });
+                                });
+
+                            });
+
+                        var file = $(this).parent().parent()[0];
+                        file.parentNode.removeChild(file);
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.addFile',
+                    function () {
+                        var fileTemp = $('#tempFile');
+                        $(this).before(fileTemp[0].innerHTML);
+
+                        var index = $(this).siblings('.chapter_index')[0].innerText;
+                        var j = index.substring(index.indexOf('第') + 1, index.lastIndexOf('章'));
+
+                        var i = $(this).siblings('.file').length;
+                        $(this).prev().children('.file_index')[0].innerText = '第' + i + '节：';
+
+                        var node = $(this).prev().children().children().children();
+                        [node, node.children()].forEach(function (item) {
+                            item.children('[name^=Chapters]')
+                            .each(function () {
+                                var end = $(this)[0].name.lastIndexOf(']');
+                                $(this)[0].name = 'Chapters[' +
+                                    (j - 1) +
+                                    '].Files[' +
+                                    (i - 1) +
+                                    $(this)[0].name.substring(end);
+                            });
+                        });
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.delChapter',
+                    function() {
+                        $(this)
+                            .parent()
+                            .siblings('.chapter')
+                            .each(function(i) {
+                                $(this).children('.chapter_index')[0].innerText = '第' + (i + 1) + '章';
+                                $(this)
+                                    .children()
+                                    .children()
+                                    .children('[name^=Chapters]')
+                                    .each(function() {
+                                        var end = $(this)[0].name.indexOf(']');
+                                        $(this)[0].name = 'Chapters[' +
+                                            i +
+                                            $(this)[0].name.substring(end);
+                                    });
+                            });
+
+                        var chapter = $(this).parent()[0];
+                        var br = $(this).parent().next()[0];
+                        chapter.parentNode.removeChild(chapter);
+                        br.parentNode.removeChild(br);
+                    });
+
+            $('.addChapter')
+                .click(function () {
+                    var chapterTemp = $('#tempChapter');
+                    $('#submitDiv').before(chapterTemp[0].innerHTML);
+
+                    var i = $(this).parent().siblings('.chapter').length;
+                    $('#submitDiv').prev().prev().children('.chapter_index')[0].innerText = '第' + i + '章';
+
+                    $('#submitDiv')
+                        .prev()
+                        .prev()
+                        .children()
+                        .children()
+                        .children('[name^=Chapters]')
+                        .each(function () {
+                            var end = $(this)[0].name.indexOf(']');
+                            $(this)[0].name = 'Chapters[' +
+                                (i - 1) +
+                                $(this)[0].name.substring(end);
+                        });
+                });
+        });
+</script>
+

@@ -1,0 +1,118 @@
+﻿<div class="widget-box widget-color-blue2">
+    <div class="widget-header">
+        <h4 class="widget-title lighter smaller">管理人员列表</h4>
+    </div>
+    <table datatable="ng" dt-options="dtOptions" dt-instance="dtInstance" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered table-hover row-border hover">
+        <thead>
+            <tr>
+                <th class="center">
+                    <label class="pos-rel">
+                        <input type="checkbox" class="ace" ng-model="selectFlag" ng-change="selectAll(selectFlag)" />
+                        <span class="lbl"></span>
+                    </label>
+                    <span ng-if="selectedCount > 0">
+                        <a class="green" title="编辑" ng-click="updateRoles()"><i class="ace-icon fa fa-pencil bigger-130"></i></a>
+                    </span>
+                </th>
+                <th>工号</th>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>职位</th>
+                <th>状态</th>
+                <th>角色</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="admin in adminRoles" ng-class="{'selected': admin.selected || false}">
+                <td class='center'>
+                    <label class="pos-rel">
+                        <input type='checkbox' class="ace" ng-model="admin.selected" ng-change="selectAdmin()" />
+                        <span class="lbl"></span>
+                    </label>
+                </td>
+                <td ng-bind="admin.UserUniqueId"></td>
+                <td><a href='#' ng-bind="admin.Name"></a></td>
+                <td ng-bind="admin.Mobile"></td>
+                <td ng-bind="admin.Position"></td>
+                <td>
+                    <span ng-if="admin.Status == 1" class='label label-sm label-success'>已关注</span>
+                    <span ng-if="admin.Status == 2" class='label label-sm label-danger'>已禁用</span>
+                    <span ng-if="admin.Status == 4" class='label label-sm label-warning'>未关注</span>
+                </td>
+                <td ng-bind="admin.Roles"></td>
+                <td>
+                    <button class="btn btn-xs btn-success" ng-click="setAdmin(admin)">
+                        <i class="ace-icon fa fa-check bigger-120"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/ng-template" id="addAdminRoles.html">
+    <div class="modal-header">
+        <div class="container">
+            <h3 class="modal-title">批量添加权限</h3>
+        </div>
+    </div>
+    <form class="form-horizontal" role="form" name="adminRoleForm" id="adminRoleForm" novalidate>
+        <div class="modal-body">
+            <div class="container">
+                <div class="form-group" style="height:150px;">
+                    <input class="ng-hide" name="admins" ng-model="selectedAdmins" />
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="roles">选择权限</label>
+                        <div class="col-xs-12 col-sm-9">
+                            <select id="roles" class="multiselect" ng-model="selectedRoles" ng-options="role as role.label for role in roles"
+                                    multiple="multiple" multiselect-dropdown></select>
+                            <input class="ng-hide" name="adminRoles" value="{{selectedRoles}}" />
+                        </div>
+                    </div>
+                </div>
+                @Html.AntiForgeryToken()
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="container">
+                <button type="submit" class="btn btn-primary btn-sm">提交</button>
+                <button type="reset" class="btn btn-default  btn-sm" ng-click="cancel($event)">Cancel</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/ng-template" id="updateRoles.html">
+    <div class="modal-header">
+        <div class="container">
+            <h3 class="modal-title">编辑权限</h3>
+        </div>
+    </div>
+    <form class="form-horizontal" role="form" name="updateRoleForm" id="updateRoleForm" novalidate ng-submit="updateAdminRoles()">
+        <div class="modal-body">
+            <div class="container">
+                <input class="ng-hide" name="admin" value="{{admin}}" />
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-top" for="roleList">选择权限</label>
+                    <div class="col-sm-8">
+                        <!-- #section:plugins/input.duallist -->
+                        <select multiple="multiple" size="10" name="roles" id="roleList">
+                            <option ng-selected="{{role.selected}}" ng-repeat="role in roles" 
+                                    value="{{role.value}}">{{role.label}}</option>
+                        </select>
+                        <!-- /section:plugins/input.duallist -->
+                        <div class="hr hr-16 hr-dotted"></div>
+                    </div>
+                </div>
+                @Html.AntiForgeryToken()
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="container">
+                <button type="submit" class="btn btn-primary btn-sm">提交</button>
+                <button type="reset" class="btn btn-default  btn-sm" ng-click="cancel($event)">Cancel</button>
+            </div>
+        </div>
+    </form>
+</script>

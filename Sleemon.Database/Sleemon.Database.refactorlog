@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="cc3d5dc8-27bc-4b5f-a735-052b5db0b9dd" ChangeDateTime="05/25/2016 06:35:08">
+    <Property Name="ElementName" Value="[dbo].[UserRole].[UserId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserRole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserUnqiueId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2a625ed6-d706-42d9-aacb-407e337c7a17" ChangeDateTime="07/30/2016 14:50:31">
+    <Property Name="ElementName" Value="[dbo].[UserComments].[IsLegal]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserComments]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LegalStatus" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6588c7b5-1b72-410a-ad93-d7822665951b" ChangeDateTime="07/30/2016 14:51:52">
+    <Property Name="ElementName" Value="[dbo].[UserOrderShow].[IsLegal]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserOrderShow]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LegalStatus" />
+  </Operation>
+</Operations>

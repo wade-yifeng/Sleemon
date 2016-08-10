@@ -1,0 +1,239 @@
+﻿@model Sleemon.Portal.Models.User
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>欢迎 - 喜临门学习（培训）管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <link rel="Stylesheet" type="text/css" href="~/Assets/css/bootstrap.min.css" />
+    <link rel="Stylesheet" type="text/css" href="~/Assets/components/font-awesome/css/font-awesome.min.css" />
+    <link rel="Stylesheet" type="text/css" href="~/Assets/css/ace-fonts.css" />
+    <link rel="Stylesheet" type="text/css" href="~/Assets/css/ace.min.css" />
+</head>
+
+<body class="login-layout">
+    <div class="main-container">
+        <div class="main-content">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="login-container">
+                        <div class="center">
+                            <h1>
+                                <i class="ace-icon fa fa-leaf green"></i>
+                                <span class="white" id="id-text2">喜临门学习（培训）管理系统</span>
+                            </h1>
+                            <h4 class="blue" id="id-company-text">&#64;喜临门学院</h4>
+                        </div>
+                        <div class="space-6"></div>
+                        <div class="position-relative">
+                            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "LoginForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.RedirectUrl)
+                                <div id="login-box" class="visible widget-box no-border">
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <h4 class="header blue lighter bigger">
+                                                <i class="ace-icon fa fa-coffee green"></i>
+                                                请输入登录信息
+                                            </h4>
+                                            <div class="space-6"></div>
+                                            <form>
+                                                <fieldset>
+                                                    <label class="block clearfix">
+                                                        <span class="block input-icon input-icon-right">
+                                                            @Html.TextBoxFor(model => model.UserUniqueId, new { @class = "form-control", placeholder = "填写工号" })
+                                                            <i class="ace-icon fa fa-user"></i>
+                                                        </span>
+                                                    </label>
+                                                    <label class="block clearfix">
+                                                        <span class="block input-icon input-icon-right">
+                                                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "输入密码" })
+                                                            <i class="ace-icon fa fa-lock"></i>
+                                                        </span>
+                                                    </label>
+                                                    <div class="space"></div>
+                                                    <div class="clearfix">
+                                                        <label class="inline">
+                                                            <input class="ace" data-val="true" id="IsAutoLogin" name="IsAutoLogin" type="checkbox" value="true">
+                                                            <span class="lbl">下次自动登陆</span>
+                                                            <input name="IsAutoLogin" type="hidden" value="false">
+                                                        </label>
+                                                        <button type="button" id="submitLoginBtn" class="width-35 pull-right btn btn-sm btn-primary" onclick="submitLoginForm()">
+                                                            <i class="ace-icon fa fa-key"></i>
+                                                            <span class="bigger-110">登陆</span>
+                                                        </button>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div><!-- /.widget-main -->
+                                    </div><!-- /.widget-body -->
+                                </div><!-- /.login-box -->
+                            }
+                            @using (Html.BeginForm("ResetPassword", "Account", FormMethod.Post, new { id = "ResetForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div id="reset-box" class="widget-box no-border">
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <h4 class="header red lighter bigger">
+                                                <i class="ace-icon fa fa-key"></i>
+                                                重置密码
+                                            </h4>
+                                            <div class="space-6"></div>
+                                            <p>
+                                                请输入新的密码(建议包含:大写字母/数字/符号)
+                                            </p>
+                                            <form>
+                                                <fieldset>
+                                                    <label class="block clearfix">
+                                                        <span class="block input-icon input-icon-right">
+                                                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "输入密码" })
+                                                            <i class="ace-icon fa fa-lock"></i>
+                                                        </span>
+                                                    </label>
+
+                                                    <div class="clearfix">
+                                                        <button type="button" id="submitResetBtn" class="width-35 pull-right btn btn-sm btn-danger" onclick="submitResetForm()">
+                                                            <i class="ace-icon fa fa-lightbulb-o"></i>
+                                                            <span class="bigger-110">提交</span>
+                                                        </button>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div><!-- /.widget-main -->
+                                    </div><!-- /.widget-body -->
+                                </div><!-- /.reset-box -->
+                            }
+                        </div><!-- /.position-relative -->
+                    </div>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container -->
+
+    <script src="/Assets/components/jquery/jquery.min.js"></script>
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement) document.write("<script src='/Assets/components/jquery/jquery.mobile.custom.js'>" + "<" + "/script>");
+    </script>
+    <script src="/Assets/components/bootstrap/bootstrap.min.js"></script>
+    <script src="/Assets/components/bootbox.js/bootbox.min.js"></script>
+    <script type="text/javascript">
+        var submitLoginForm = function () {
+            var $form = $('form#LoginForm'), $submitBtn = $('button#submitLoginBtn');
+
+            $submitBtn.attr("disabled", "disabled");
+
+            var url = $form.attr('action');
+
+            $.ajax({
+                url: url,
+                type: $form.attr("method"),
+                data: new FormData($form[0]),
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (response, status) {
+                if (status == "success") {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl || "/";
+                        return false;
+                    }
+                    else if(response.reset) {
+                        $('.widget-box.visible').removeClass('visible');//hide others
+                        $('#reset-box').addClass('visible');//show target    
+                    } else {
+                        var message = response.errorMessage || "登录发生错误，请联系管理员！";
+                        bootbox.dialog({
+                            size: 'small',
+                            message: message,
+                            title: "登录失败",
+                            buttons: {
+                                main: {
+                                    label: "确认",
+                                    className: "btn-primary",
+                                    callback: function () {}
+                                }
+                            }
+                        });
+                    }
+                    $submitBtn.removeAttr("disabled");
+                } else {
+                    bootbox.dialog({
+                        size: 'small',
+                        message: "登录发生错误，请联系管理员！",
+                        title: "发生异常",
+                        buttons: {
+                            main: {
+                                label: "确认",
+                                className: "btn-primary",
+                                callback: function () { }
+                            }
+                        }
+                    });
+                    $submitBtn.removeAttr("disabled");
+                }
+            });
+
+            return false;
+        };
+
+        var submitResetForm = function () {
+            var $form = $('form#ResetForm'), $submitBtn = $('button#submitResetBtn');
+
+            $submitBtn.attr("disabled", "disabled");
+
+            var url = $form.attr('action');
+
+            $.ajax({
+                url: url,
+                type: $form.attr("method"),
+                data: new FormData($form[0]),
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (response, status) {
+                if (status == "success") {
+                    if (response.success) {
+                        $('.widget-box.visible').removeClass('visible');//hide others
+                        $('#login-box').addClass('visible');//show target   
+                    } else {
+                        var message = response.errorMessage || "设置密码发生错误，请联系管理员！";
+                        bootbox.dialog({
+                            size: 'small',
+                            message: message,
+                            title: "重置密码失败",
+                            buttons: {
+                                main: {
+                                    label: "确认",
+                                    className: "btn-primary",
+                                    callback: function () { }
+                                }
+                            }
+                        });
+                    }
+                    $submitBtn.removeAttr("disabled");
+                } else {
+                    bootbox.dialog({
+                        size: 'small',
+                        message: "设置密码发生错误，请联系管理员！",
+                        title: "发生异常",
+                        buttons: {
+                            main: {
+                                label: "确认",
+                                className: "btn-primary",
+                                callback: function () { }
+                            }
+                        }
+                    });
+                    $submitBtn.removeAttr("disabled");
+                }
+            });
+
+            return false;
+        };
+    </script>
+</body>
+</html>

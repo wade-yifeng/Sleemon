@@ -1,0 +1,102 @@
+﻿@model Sleemon.Data.TaskDetailsModel
+
+
+<form id="storePatrolForm" >
+    <div class="notice_edit col-xs-12 col-sm-8">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4 class="widget-title">新增/编辑 巡店任务</h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div>
+                        @{
+                            if (Model != null)
+                            {
+                                <input type="hidden" name="TaskId" value="@Model.TaskId"/> 
+                            }
+                            else
+                            {
+                               <input type="hidden" name="TaskId" value="0"/>   
+                            }
+                        }
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">任务名称 (必填,最多50个字)</label>
+                        @Html.TextBoxFor(u => u.Title, new { @class = "form-control", placeholder = "输入任务名称...", maxlength = "50" })
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">开始时间</label>
+                        @Html.TextBoxFor(u => u.StartFrom, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">结束时间</label>
+                        @Html.TextBoxFor(u => u.EndTo, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">任务得分</label>
+                        @Html.TextBoxFor(u => u.Point, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">延期得分</label>
+                        @Html.TextBoxFor(u => u.OverduePoint, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">描述 (最多250个字)</label>
+                        @Html.TextAreaFor(u => u.Description, new { @class = "form-control", maxlength = "250" })
+                    </div>
+                    <div class="form-actions center">
+                        <button type="button" class="btn btn-sm btn-success" onclick="create()">
+                            提交
+                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                        </button>
+                    </div>
+                    <div class="form-actions center">
+                        @{
+                            if (Model != null)
+                            {
+                                if(ViewBag.IsSuccess!=null)
+                                {
+                                    if (ViewBag.IsSuccess)
+                                    {
+                                        <span class="success">保存成功！</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="alert alert-danger">保存失败！</span>
+                                     }
+                                }
+                            }
+                        }
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript" language="javascript">
+    function create() {
+        $.ajax({
+            type: "POST",
+            url: "/StorePatrol/AddUpdateStorePatrol",
+            cache: false,
+            data: $("#storePatrolForm").serialize(),
+            success: function (data) {
+                $(".col-content").html(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+    $("#StartFrom").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    $("#EndTo").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+</script>

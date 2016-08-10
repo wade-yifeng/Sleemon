@@ -1,0 +1,268 @@
+﻿<#
+//*********************************************************
+//
+//    Copyright (c) Microsoft. All rights reserved.
+//    This code is licensed under the Microsoft Public License.
+//    THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+//    ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+//    IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+//    PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+#>
+<#@ template language="C#" debug="true" hostspecific="true"#>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ include file="EntitiesGen.Functions.t4" #>
+<#@ include file="EF.Utility.CS.ttinclude"#>
+<#@ output extension=".cs"#>
+<#
+
+
+CodeGenerationTools code = new CodeGenerationTools(this);
+MetadataTools ef = new MetadataTools(this);
+MetadataLoader loader = new MetadataLoader(this);
+CodeRegion region = new CodeRegion(this);
+
+string inputFile = FindEDMXFileName();
+EdmItemCollection ItemCollection = loader.CreateEdmItemCollection(inputFile);
+string namespaceName = code.VsNamespaceSuggestion();
+
+EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this);
+EntityContainer container = ItemCollection.GetItems<EntityContainer>().FirstOrDefault();
+if (container == null)
+{
+    return "// No EntityContainer exists in the model, so no code was generated";
+}
+string containerName = code.Escape(container);
+#>
+// This file is auto-generated, do not modify this file.
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+
+<#
+if (!String.IsNullOrEmpty(namespaceName))
+{
+#>
+namespace <#=code.EscapeNamespace(namespaceName)#>
+{
+<#
+    PushIndent(CodeRegion.GetIndent(1));
+}
+#>
+<#=Accessibility.ForType(container)#> sealed class <#=containerName#> : DbContext, I<#=containerName#>
+{
+    public const string ConnectionString = "name=<#=container.Name#>";
+    public const string ContainerName = "<#=container.Name#>";
+
+	public void Detach(object obj)
+	{
+		Entry(obj).State = EntityState.Detached;
+	}
+	
+	public void DiscardChanges()
+	{
+		_Context.DiscardChanges();
+	}
+
+	
+	private ObjectContext _Context
+	{
+		get { return ((IObjectContextAdapter)this).ObjectContext; }
+	}
+	
+
+    #region Constructors
+
+    public <#=containerName#>()
+        : this(ConnectionString)
+    {
+    }
+
+    public <#=code.Escape(container)#>(string connectionString, int? commandTimeout = null)
+        : base(connectionString)
+    {
+<#
+        WriteLazyLoadingEnabled(container);
+#>
+		_Context.CommandTimeout = commandTimeout ?? 120;
+		Configuration.ValidateOnSaveEnabled = false; 
+    }
+
+    #endregion
+	
+	bool I<#=containerName#>.CanPreCompile
+	{
+		get { return true; }
+	}
+
+<#
+        region.Begin("DbSet Properties", 2);
+
+        foreach (EntitySet entitySet in container.BaseEntitySets.OfType<EntitySet>().OrderBy(e=>e.Name))
+        {
+#>
+    public IDbSet<<#=code.Escape(entitySet.ElementType)#>> <#=code.Escape(entitySet)#> { get; set; }
+<#
+        }
+        region.End();
+#>
+
+<#
+        region.Begin("Function Imports");
+
+		foreach (EdmFunction edmFunction in container.FunctionImports.OrderBy(e=>e.Name))
+		{
+			var parameters = FunctionImportParameter.Create(edmFunction.Parameters, code, ef);
+			string paramList = String.Join(", ", parameters.Select(p => p.FunctionParameterType + " " + p.FunctionParameterName).ToArray());
+			string returnTypeElement = "int";
+			if (edmFunction.ReturnParameter == null)
+			{
+#>
+
+	<#=Accessibility.ForMethod(edmFunction)#> void <#=code.Escape(edmFunction)#>(<#=paramList#>)
+	{
+<#
+			}
+			else
+			{
+				returnTypeElement = code.Escape(ef.GetElementType(edmFunction.ReturnParameter.TypeUsage));
+#>
+
+	<#=Accessibility.ForMethod(edmFunction)#> ObjectResult<<#=returnTypeElement#>> <#=code.Escape(edmFunction)#>(<#=paramList#>)
+	{
+<#
+			}
+
+			foreach (var parameter in parameters)
+			{
+				if (!parameter.NeedsLocalVariable)
+				{
+					continue;
+				}
+#>
+		ObjectParameter <#=parameter.LocalVariableName#> = <#=parameter.IsNullableOfT ? parameter.FunctionParameterName + ".HasValue" : parameter.FunctionParameterName + " != null"#> ? new ObjectParameter("<#=parameter.EsqlParameterName#>", <#=parameter.FunctionParameterName#>) : new ObjectParameter("<#=parameter.EsqlParameterName#>", typeof(<#=parameter.RawClrTypeName#>));
+<#
+			}
+			if (edmFunction.ReturnParameter == null)
+			{
+#>
+		_Context.ExecuteFunction("<#=edmFunction.Name#>"<#=code.StringBefore(", ", String.Join(", ", parameters.Select(p => p.ExecuteParameterName).ToArray()))#>);
+	}
+<#
+			}
+			else
+			{
+#>
+		return _Context.ExecuteFunction<<#=returnTypeElement#>>("<#=edmFunction.Name#>"<#=code.StringBefore(", ", String.Join(", ", parameters.Select(p => p.ExecuteParameterName).ToArray()))#>);
+	}
+<#if (edmFunction.ReturnParameter == null){
+#> 
+	void <# } else { #> 
+	IEnumerable<<#=returnTypeElement#>> <#}#> I<#=code.Escape(container)#>.<#=code.Escape(edmFunction)#>(<#=paramList#>)
+	{
+<#if (edmFunction.ReturnParameter != null){
+#> 		return <#}#> this.<#=code.Escape(edmFunction)#>(<#=String.Join(", ", parameters.Select(p => p.FunctionParameterName).ToArray())#>);	
+	}
+<#
+			}
+		}
+		region.End();
+#>
+    public void SetEntryState<T>(T entry, EntityState state) where T : Entity
+    {
+        this.Entry(entry).State = state;
+    }
+}
+<#
+if (!String.IsNullOrEmpty(namespaceName))
+{
+    PopIndent();
+#>
+}
+<#
+}
+#>
+
+
+<#fileManager.StartNewFile("I" + code.Escape(container) + ".generated.cs");#>
+// Context interface. This file is auto-generated, do not modify this file.
+using System;
+using System.Data.Entity;
+using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
+
+<#
+if (!String.IsNullOrEmpty(namespaceName))
+{
+#>
+namespace <#=code.EscapeNamespace(namespaceName)#>
+{
+<#
+    PushIndent(CodeRegion.GetIndent(1));
+}
+#>
+<#=Accessibility.ForType(container)#> partial interface I<#=containerName#> : IDisposable
+{
+	bool CanPreCompile { get; }
+	void Detach(object entity);
+	int SaveChanges();
+	void DiscardChanges();
+<#
+	region.Begin("DbSet Properties", 1);
+    foreach (EntitySet entitySet in container.BaseEntitySets.OfType<EntitySet>().OrderBy(e=>e.Name))
+    {
+#>
+    IDbSet<<#=code.Escape(entitySet.ElementType)#>> <#=code.Escape(entitySet)#> { get; set; }
+<#
+	}
+    region.End();
+#>
+<#
+    region.Begin("Function Imports");
+
+	foreach (EdmFunction edmFunction in container.FunctionImports.OrderBy(e=>e.Name))
+	{
+		var parameters = FunctionImportParameter.Create(edmFunction.Parameters, code, ef);
+		string paramList = String.Join(", ", parameters.Select(p => p.FunctionParameterType + " " + p.FunctionParameterName).ToArray());
+		string returnTypeElement = "int";
+		if (edmFunction.ReturnParameter == null)
+		{
+#>	void <# } else { 
+	returnTypeElement = code.Escape(ef.GetElementType(edmFunction.ReturnParameter.TypeUsage));
+	#>    IEnumerable<<#=returnTypeElement#>> <#}#><#=code.Escape(edmFunction)#>(<#=paramList#>);
+
+<#
+    }
+	region.End();
+#>
+    Database Database { get; }
+
+    void SetEntryState<T>(T entry, EntityState state) where T : Entity;
+}
+<#PopIndent();#>
+}
+
+<# fileManager.Process();#>
+
+<#+
+
+private void WriteLazyLoadingEnabled(EntityContainer container)
+{
+   string lazyLoadingAttributeValue = null;
+   string lazyLoadingAttributeName = MetadataConstants.EDM_ANNOTATION_09_02 + ":LazyLoadingEnabled";
+   if(MetadataTools.TryGetStringMetadataPropertySetting(container, lazyLoadingAttributeName, out lazyLoadingAttributeValue))
+   {
+       bool isLazyLoading = false;
+       if(bool.TryParse(lazyLoadingAttributeValue, out isLazyLoading))
+       {
+#>
+        Configuration.LazyLoadingEnabled = <#=isLazyLoading.ToString().ToLowerInvariant()#>;
+<#+
+       }
+   }
+}
+#>

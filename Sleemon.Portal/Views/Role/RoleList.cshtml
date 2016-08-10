@@ -1,0 +1,208 @@
+﻿@model  Sleemon.Data.RoleListModel
+<div class="panel panel-default">
+<div class="panel-body">
+    <div class="container">
+        <div class="row">
+            <section>
+                <form id="roleListForm">
+                    <div class="col-lg-10 col-lg-offset-0">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">角色名称：</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control" name="taskTitle" id="roleName" value="@ViewBag.taskTitle">
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="search()">查 询</button>
+                        </div>
+                        <input type="hidden" name="pageIndex" id="pageIndex" value="@ViewBag.pageIndex" />
+                        <input type="hidden" name="pageSize" id="pageSize" value="15" />
+                    </div>
+                </form>
+            </section>
+            <div class="col-lg-2 col-lg-offset-0">
+                <button type="button" class="btn btn-primary" onclick="rolePermission(0)">创 建</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@if (Model != null && Model.listRole!=null&&Model.listRole.Count > 0)
+{
+    <input type="hidden" name="totalCount" id="totalCount" value="@Model.TotalCount" />
+    <table class="table">
+        <caption>角色列表</caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>角色名</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+    for (int i = 0; i < Model.listRole.Count; i++)
+    {
+        int xh = (i + 1) + (Model.PageIndex - 1) * Model.PageSize;
+        <tr>
+            <td>@xh</td>
+            <td>@Model.listRole[i].role.Name</td>
+            <td>
+                <a data-toggle="modal" href="#" onclick="rolePermission(@Model.listRole[i].role.Id,'@Model.listRole[i].role.Name','@Model.listRole[i].permissions')">编辑</a>
+                <a data-toggle="modal" href="#" onclick="deleteByid(@Model.listRole[i].role.Id)">删除</a>
+
+            </td>
+        </tr>
+    }
+            }
+
+        </tbody>
+    </table>
+    <div id="divPager"></div>
+}
+else
+{
+    <input type="hidden" name="totalCount" id="totalCount" value="0" />
+   
+}
+<div class="modal fade" id="addRole" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    添加/更新角色
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label>角色名称：</label>
+                    <input type="text" class="form-control" name="roleName_edit" id="roleName_edit" value="" maxlength="50" />
+                    <input type="hidden" name="roleId_edit" id="roleId_edit" value="0"/>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" class="btn btn-primary" onclick="update()">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+<script type="text/javascript" language="javascript">
+   
+    function search() {
+        $.ajax({
+            type: "GET",
+            url: "/Role/GetRoleList",
+            cache: false,
+            data: $("#roleListForm").serialize(),
+            success: function(data) {
+                $(".col-content").html(data);
+            },
+            error: function(err) {
+                console.log(err);
+            }
+        });
+    }
+    function rolePermission(roleId,roleName,rolePermissions) {
+        $.ajax({
+            type: "GET",
+            url: "/Role/RolePermission",
+            cache: false,
+            data: {roleId:roleId,roleName:roleName,rolePermissions:rolePermissions},
+            success: function(data) {
+                $(".col-content").html(data);
+            },
+            error: function(err) {
+                console.log(err);
+            }
+        });
+    }
+    function update() {
+        $.ajax({
+            type: "Post",
+            url: "/Role/UpdateRole",
+            data: { roleid: $("#roleId_edit").val(), roleName: $("#roleName_edit").val() },
+            cache: false,
+            success: function (data) {
+                alert(data.Message);
+                $("#addRole").modal('hide');
+                search();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+    function edit(roleid,roleName) {
+        $("#addRole").modal('show');// $("#addRole").modal('hide');
+        $('#addRole').on('shown.bs.modal', function () {
+            $("#roleId_edit").val(roleid);
+            $("#roleName_edit").val(roleName);
+        })
+    }
+    function deleteByid(roleid) {
+        if(confirm("确定要删除吗？"))
+        {
+            $.ajax({
+                type: "Get",
+                url: "/Role/DeleteRole",
+                data: {roleid:roleid},
+                cache: false,
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        alert("删除成功！");
+                        search();
+                    }
+                    else {
+                        alert("删除失败！");
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    }
+
+    $("#startFrom").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    $("#endTo").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    //分页
+    var options = {
+        bootstrapMajorVersion: 2, //版本
+        currentPage: $("#pageIndex").val(), //当前页数
+        totalPages: $("#totalCount").val() % $("#pageSize").val() == 0 ? $("#totalCount").val() / $("#pageSize").val() : ($("#totalCount").val() / $("#pageSize").val()) + 1, //总页数
+        itemTexts: function (type, page, current) {
+            switch (type) {
+                case "first":
+                    return "首页";
+                case "prev":
+                    return "上一页";
+                case "next":
+                    return "下一页";
+                case "last":
+                    return "末页";
+                case "page":
+                    return page;
+            }
+        },
+        onPageClicked: function (event, originalEvent, type, page) {
+            $("#pageIndex").val(page);
+            search();
+        }
+    }
+
+    $('#divPager').bootstrapPaginator(options);
+    </script>

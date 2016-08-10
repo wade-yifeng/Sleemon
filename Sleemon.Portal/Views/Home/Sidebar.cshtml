@@ -1,0 +1,30 @@
+﻿<div class="sidebar-shortcuts">
+    <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+        <button class="btn btn-success" ui-sref="Home">
+            <i class="ace-icon fa fa-home bigger-140"></i>
+        </button>
+        <button class="btn btn-info" ui-sref="Setting.Global">
+            <i class="ace-icon fa fa-cogs bigger-120"></i>
+        </button>
+        <button class="btn btn-warning" ui-sref="Setting.Connect">
+            <i class="ace-icon fa fa-users bigger-110"></i>
+        </button>
+        <button class="btn btn-danger" ui-sref="Setting.Connect">
+            <i class="ace-icon fa fa-bolt bigger-110"></i>
+        </button>
+    </div>
+    <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+        <span class="btn btn-success"></span>
+        <span class="btn btn-info"></span>
+        <span class="btn btn-warning"></span>
+        <span class="btn btn-danger"></span>
+    </div>
+</div>
+
+<ul class="nav nav-list">
+    <li ng-repeat="item in ::sidebar.root" ng-include="'/Templates/menu.html'" ng-class="{'open':item.submenu && isSubOpen(item.name), 'active': isActiveItem(item.name), 'hover': $parent.portal.settings.hover, 'highlight': $parent.portal.settings.highlight}"></li>
+</ul>
+
+<div class="sidebar-toggle sidebar-collapse">
+    <i class='ace-icon fa' ng-class="{'fa-angle-double-left': !portal.sidebar.minimized, 'fa-angle-double-right': portal.sidebar.minimized}"></i>
+</div>

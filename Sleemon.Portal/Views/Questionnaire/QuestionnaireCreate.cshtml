@@ -1,0 +1,204 @@
+﻿<div class="questionnaire-detail">
+    <div class="page-header">
+        <h1>
+            问卷管理
+            <small><i class="ace-icon fa fa-angle-double-right"></i> 新增/编辑 问卷</small>
+        </h1>
+    </div>
+
+    <form class="form-horizontal" name="questionForm">
+        <div class="form-group" ng-class="{'has-error': questionForm.Title.$touched && questionForm.Title.$invalid}">
+            <label class="col-sm-3 control-label no-padding-right">问卷名称</label>
+            <div class="col-sm-6">
+                <div ng-if="!isDetailPage">
+                    <span class="block input-icon input-icon-right">
+                        <input type="text" id="inputError" class="col-xs-12" placeholder="请输入问卷名称"
+                               name="Title" ng-model="questionnaire.Title" ng-minlength="5" ng-maxlength="20" required>
+                        <i ng-if="questionForm.Title.$touched && questionForm.Title.$invalid"
+                           class="ace-icon fa fa-times-circle"></i>
+                    </span>
+                </div>
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-if="isDetailPage" ng-bind="questionnaire.Title"></p>
+            </div>
+            <div ng-messages="questionForm.Title.$error" ng-if="(questionForm.Title.$touched && questionForm.Title.$invalid) || submitted"
+                 class="help-block col-xs-12 col-sm-reset inline">
+                <span ng-message="minlength">标题太短</span>
+                <span ng-message="maxlength">标题过长</span>
+                <span ng-message="required">请输入标题</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right"> 问卷描述 </label>
+            <div class="col-sm-6">
+                <div ng-if="!isDetailPage">
+                    <textarea class="col-xs-12" placeholder="请输入问卷描述" input-limiter maxlength="200"
+                              ng-model="questionnaire.Description"></textarea>
+                </div>
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-if="isDetailPage" ng-bind="questionnaire.Description"></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4" ng-repeat="question in questionnaire.Questions">
+                <div class="widget-box">
+                    <div class="widget-header">
+                        <h5 class="widget-title">问题 <span ng-bind="question.No"></span></h5>&nbsp;
+                        <span class="badge badge-success"
+                              ng-bind="getEnumByValue(Enum.QuestionnaireQuestionCategory,question.Category).Value"></span>
+                        <div class="widget-toolbar" ng-if="!isDetailPage">
+                            <a ng-click="showEditor(question)">
+                                <i class="ace-icon glyphicon glyphicon-edit"></i>
+                            </a>&nbsp;&nbsp;
+                            <a ng-click="removeQuestion(question)">
+                                <i class="ace-icon glyphicon glyphicon-remove"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main"
+                             ng-if="question.Category!=Enum.QuestionnaireQuestionCategory.Grade.Key">
+                            <span ng-bind="question.Question"></span>
+                            <hr />
+                            <div ng-if="question.Image">
+                                <img class="data_image" ng-src="{{question.Image}}" />
+                                <hr />
+                            </div>
+                            <div class="choice-item text-primary" ng-repeat="choice in question.Choices">
+                                <span ng-bind="convertToChoiceChar(choice.Choice)+'. '+choice.Description"></span>
+                                <div ng-if="choice.Image">
+                                    <img class="data_image" ng-src="{{choice.Image}}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget-main"
+                             ng-if="question.Category==Enum.QuestionnaireQuestionCategory.Grade.Key">
+                            <span ng-bind="question.Question"></span>
+                            <hr />
+                            <div ng-if="question.Image">
+                                <img class="data_image" ng-src="{{question.Image}}" />
+                                <hr />
+                            </div>
+                            评分上限: <span ng-bind="question.Rate"></span>分
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="editor" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">&times;</button>
+                        <h4 class="smaller lighter blue no-margin"></h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="widget-box">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div>
+                                        <label>问题内容</label>
+                                        <textarea class="form-control" input-limiter maxlength="200"
+                                                  ng-model="question.Question"></textarea>
+                                    </div>
+                                    <hr />
+
+                                    <div>
+                                        <label>问题图片</label>
+                                        <input type="file" accept="image/*" ace-fileinput
+                                               options="fields.fileInputOptions"
+                                               props="fields.fileInputProps"
+                                               ng-model="question.fileInput"
+                                               on-change="quesImageChanged" />
+                                    </div>
+                                    <hr />
+
+                                    <div>
+                                        <label>问题类型</label>
+                                        <select class="form-control" ng-model="question.Category"
+                                                ng-options="v.Key as v.Value for (k,v) in Enum.QuestionnaireQuestionCategory">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                    <hr />
+
+                                    <div ng-if="question.Category==Enum.QuestionnaireQuestionCategory.Grade.Key">
+                                        <div>
+                                            <label>评分上限</label>
+                                            <input class="form-control" type="number" min="3" max="10"
+                                                   ng-model="question.Rate" />
+                                        </div>
+                                        <hr />
+                                    </div>
+
+                                    <div ng-if="question.Category==Enum.QuestionnaireQuestionCategory.SingleOption.Key || question.Category==Enum.QuestionnaireQuestionCategory.MultiOptions.Key">
+                                        <div ng-repeat="choice in question.Choices">
+                                            <div class="widget-box">
+                                                <div class="widget-header">
+                                                    <h5 class="widget-title">
+                                                        选项<span ng-bind="convertToChoiceChar(choice.Choice)"></span>
+                                                    </h5>
+                                                    <div class="widget-toolbar">
+                                                        <a ng-click="removeChoice(choice)">
+                                                            <i class="ace-icon glyphicon glyphicon-remove"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-main">
+                                                        <div>
+                                                            <label>选项描述</label>
+                                                            <textarea class="form-control" input-limiter=""
+                                                                      maxlength="50"
+                                                                      ng-model="choice.Description"></textarea>
+                                                        </div>
+                                                        <div>
+                                                            <label>选项图片</label>
+                                                            <input type="file" accept="image/*" ace-fileinput
+                                                                   options="fields.fileInputOptions"
+                                                                   props="fields.fileInputProps"
+                                                                   ng-model="choice.fileInput"
+                                                                   on-change="choiceImageChanged"
+                                                                   ng-click="setCurrentChoice(choice)" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <button class="btn btn-info" type="button" ng-click="addChoice()">
+                                            <i class="ace-icon fa glyphicon-plus bigger-110"></i> 添加选项
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-default" type="button" data-dismiss="modal">取消</button>
+                        <button class="btn btn-primary" type="button" ng-click="submitQuestion()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                <button class="btn btn-info" type="button" ng-if="!isDetailPage" ng-click="showEditor()">
+                    <i class="ace-icon fa glyphicon-plus bigger-110"></i> 添加问题
+                </button>
+                &nbsp;&nbsp;
+                <button class="btn btn-success" type="button" ng-if="!isDetailPage" ng-click="submitQuestionnaire()">
+                    <i class="ace-icon fa fa-check bigger-110"></i> 保存
+                </button>
+                &nbsp;&nbsp;
+                <button class="btn btn-info" type="button" ui-sref="Training.Questionnaire">
+                    返回问卷列表
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>

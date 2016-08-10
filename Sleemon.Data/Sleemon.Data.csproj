@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B9FAD20F-CA92-4812-836D-66FFF949B94C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sleemon.Data</RootNamespace>
+    <AssemblyName>Sleemon.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.2\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConsEnterpriseNotice.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CustomColumnInfo.cs" />
+    <Compile Include="C__RefactorLog.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Department.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DepartmentEnterpriseNotice.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnterpriseNotice.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntitiesGen.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntitiesGen.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntitiesGen.Entities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity.cs" />
+    <Compile Include="Exam.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExamChoice.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExamQuestion.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupSubTask.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupTask.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HierarchyEntity.cs" />
+    <Compile Include="IllegalCharacters.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ISleemonEntities.generated.cs">
+      <DependentUpon>EntitiesGen.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Keyword.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="KnowledgeBase.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="KnowledgeBaseKeyword.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LearningChapter.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LearningCourse.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LearningFile.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MessageDispatch.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MessageReceiver.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DepartmentModels\DepartmentBaseModel.cs" />
+    <Compile Include="Models\DepartmentModels\DepartmentModel.cs" />
+    <Compile Include="Models\DepartmentModels\DepartmentSyncModel.cs" />
+    <Compile Include="Models\DepartmentNoticeModels\EnterpriseNoticeBaseModel.cs" />
+    <Compile Include="Models\DepartmentNoticeModels\EnterpriseNoticeDetailModel.cs" />
+    <Compile Include="Models\DepartmentNoticeModels\MessageDispatchModel.cs" />
+    <Compile Include="Models\EnterpriseNotice\NoticeListModel.cs" />
+    <Compile Include="Models\ExamModels\ExamAnswerModel.cs" />
+    <Compile Include="Models\ExamModels\ExamBasicModel.cs" />
+    <Compile Include="Models\ExamModels\ExamListModel.cs" />
+    <Compile Include="Models\ExamModels\ExamResultModel.cs" />
+    <Compile Include="Models\ExamModels\ExamDetailModel.cs" />
+    <Compile Include="Models\ExamModels\ExamPreviewModel.cs" />
+    <Compile Include="Models\GroupTaskModels\GroupTaskBasicModel.cs" />
+    <Compile Include="Models\GroupTaskModels\GroupTaskDetailModel.cs" />
+    <Compile Include="Models\GroupTaskModels\GroupTaskListModel.cs" />
+    <Compile Include="Models\KnowledgeModels\KnowledgeBaseDetailModel.cs" />
+    <Compile Include="Models\KnowledgeModels\KnowledgeBaseModel.cs" />
+    <Compile Include="Models\KnowledgeModels\KnowledgeDetailModel.cs" />
+    <Compile Include="Models\LearningFileModels\CourseDetailModel.cs" />
+    <Compile Include="Models\LearningFileModels\CourseLearningFileModel.cs" />
+    <Compile Include="Models\LearningFileModels\CoursePreviewModel.cs" />
+    <Compile Include="Models\LearningFileModels\LearningCourseBasicModel.cs" />
+    <Compile Include="Models\LearningFileModels\LearningCourseDetailModel.cs" />
+    <Compile Include="Models\LearningFileModels\LearningCourseListModel.cs" />
+    <Compile Include="Models\LearningFileModels\LearningFileModel.cs" />
+    <Compile Include="Models\LearningFileModels\LearningFileListModel.cs" />
+    <Compile Include="Models\OrderShow\OrderShowModel.cs" />
+    <Compile Include="Models\OrderShow\OrderShowResponse.cs" />
+    <Compile Include="Models\QuestionModels\UserQuestionBasicModel.cs" />
+    <Compile Include="Models\QuestionModels\UserQuestionDetailModel.cs" />
+    <Compile Include="Models\QuestionModels\UserQuestionPreviewModel.cs" />
+    <Compile Include="Models\QuestionnaireModels\QuestionnaireAnswerModel.cs" />
+    <Compile Include="Models\QuestionnaireModels\QuestionnaireBasicModel.cs" />
+    <Compile Include="Models\QuestionnaireModels\QuestionnaireDetailModel.cs" />
+    <Compile Include="Models\QuestionnaireModels\QuestionnaireListModel.cs" />
+    <Compile Include="Models\QuestionnaireModels\QuestionnaireQuestionModel.cs" />
+    <Compile Include="Models\QuestionnaireModels\QuestionnaireQuestionPreviewModel.cs" />
+    <Compile Include="Models\RoleModels\RoleListModel.cs" />
+    <Compile Include="Models\SearchModels\GroupTaskSearchContext.cs" />
+    <Compile Include="Models\SearchModels\TaskItemSearchContext.cs" />
+    <Compile Include="Models\SearchModels\TaskSearchContext.cs" />
+    <Compile Include="Models\SearchModels\TrainingSearchContext.cs" />
+    <Compile Include="Models\StorePatrolModels\StorePatrolSceneModel.cs" />
+    <Compile Include="Models\StorePatrolModels\UserStorePatrolDetailModel.cs" />
+    <Compile Include="Models\StorePatrolModels\UserStorePatrolPointModel.cs" />
+    <Compile Include="Models\StorePatrolModels\UserStorePatrolDetailsModel.cs" />
+    <Compile Include="Models\StorePatrolModels\UserStorePatrolListModel.cs" />
+    <Compile Include="Models\StorePatrolModels\StorePatrolListModel.cs" />
+    <Compile Include="Models\StorePatrolModels\UserStorePatrolModel.cs" />
+    <Compile Include="Models\StorePatrolModels\UserStorePatrolPreviewModel.cs" />
+    <Compile Include="Models\TaskModels\TaskAbilityModel.cs" />
+    <Compile Include="Models\TaskModels\TaskBasicModel.cs" />
+    <Compile Include="Models\TaskModels\TaskDetailsModel.cs" />
+    <Compile Include="Models\TaskModels\TaskItemModel.cs" />
+    <Compile Include="Models\TaskModels\TaskListModel.cs" />
+    <Compile Include="Models\TaskModels\UserTaskDetailsModel.cs" />
+    <Compile Include="Models\TaskModels\UserTaskInfo.cs" />
+    <Compile Include="Models\TrainingModels\TrainingBaseModel.cs" />
+    <Compile Include="Models\TrainingModels\TrainingDetailModel.cs" />
+    <Compile Include="Models\TrainingModels\TrainingListModel.cs" />
+    <Compile Include="Models\TrainingModels\UserTrainingDetailModel.cs" />
+    <Compile Include="Models\UpLoadFileModel.cs" />
+    <Compile Include="Models\DepartmentNoticeModels\EnterpriseNoticeSubmitModel.cs" />
+    <Compile Include="Models\DepartmentNoticeModels\EnterpriseNoticePreviewModel.cs" />
+    <Compile Include="Models\MessageViewModel.cs" />
+    <Compile Include="Models\NewCommentViewModel.cs" />
+    <Compile Include="Models\PagedUserComment.cs" />
+    <Compile Include="Models\ProCommentResult.cs" />
+    <Compile Include="Models\ProConNoticeResult.cs" />
+    <Compile Include="Models\ResultBase.cs" />
+    <Compile Include="Models\SyncResult.cs" />
+    <Compile Include="Models\UserModels\AdminRoleModel.cs" />
+    <Compile Include="Models\UserModels\AdminRolesModel.cs" />
+    <Compile Include="Models\UserModels\UserBaseModel.cs" />
+    <Compile Include="Models\UserModels\UserComment.cs" />
+    <Compile Include="Models\UserModels\UserDailySignInModel.cs" />
+    <Compile Include="Models\UserModels\UserDepartmentSyncModel.cs" />
+    <Compile Include="Models\UserModels\UserMomentPreviewModel.cs" />
+    <Compile Include="Models\UserModels\UserPointRecordPreviewModel.cs" />
+    <Compile Include="Models\UserModels\UserProfile.cs" />
+    <Compile Include="Models\UserModels\UserListModel.cs" />
+    <Compile Include="Models\UserModels\UserViewModel.cs" />
+    <Compile Include="Models\TaskModels\UserTaskModel.cs" />
+    <Compile Include="Models\TrainingModels\UserTrainingPreviewModel.cs" />
+    <Compile Include="OrderShowFile.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Permission.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProsComments.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProsEnterpriseNotice.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Questionnaire.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionnaireChoice.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionnaireItem.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Role.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RolePermission.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SleemonEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SleemonEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="SleemonExceptionLog.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spCommitEntireExam_Result.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spGetBroadcastMessage_Result.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spGetStorePatrolList_Result.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="StorePatrol.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SystemConfig.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Task.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaskExam.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaskLearning.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaskQuestionnaire.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Training.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TrainingTask.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserComments.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserDailySignIn.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserDepartment.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserExamAnswer.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserMoments.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserOrderShow.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserPointRecord.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserQuestion.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserQuestionnaireAnswer.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserRole.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserStorePatrol.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserTask.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserTraining.generated.cs">
+      <DependentUpon>EntitiesGen.Entities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EntitiesGen.Common.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="EntitiesGen.Functions.t4" />
+    <None Include="packages.config" />
+    <EntityDeploy Include="SleemonEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SleemonEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="SleemonEntities.edmx.diagram">
+      <DependentUpon>SleemonEntities.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sleemon.Common\Sleemon.Common.csproj">
+      <Project>{0096F288-F543-44D3-940D-733AFA509A86}</Project>
+      <Name>Sleemon.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\msvcr100.dll">
+      <Link>SqlServerTypes\x64\msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\SqlServerSpatial110.dll">
+      <Link>SqlServerTypes\x64\SqlServerSpatial110.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x86\msvcr100.dll">
+      <Link>SqlServerTypes\x86\msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x86\SqlServerSpatial110.dll">
+      <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EntitiesGen.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntitiesGen.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntitiesGen.Entities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntitiesGen.Entities.cs</LastGenOutput>
+    </Content>
+    <Content Include="SqlServerTypes\readme.htm" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

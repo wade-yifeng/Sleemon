@@ -1,0 +1,85 @@
+﻿@using Sleemon.Data;
+@using Sleemon.Common;
+@using Sleemon.Portal.HtmlHelpers;
+
+<!DOCTYPE html>
+<html lang="zh-cn" ng-app="SleemonPortal">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title ng-bind-template="{{pageTitle || '欢迎'}} - 喜临门学习（培训）管理系统">欢迎 - 喜临门学习（培训）管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    @Styles.Render("~/Assets/css")
+</head>
+<body ng-controller="MainController" ng-class="bodySkin()">
+    <div class="navbar navbar-default" ng-class="{'navbar-fixed-top': portal.settings.navbar}" ng-include="'/Home/Navigator'"></div>
+    <div class="main-container" ng-class="{'container': portal.settings.container}">
+        <div id="sidebar" class="sidebar responsive" ng-controller="SidebarController" ace-sidebar props="portal.sidebar" scroll="true" hover="true"
+             ng-class="{'menu-min': portal.sidebar.minimized, 'sidebar-fixed': portal.settings.sidebar, 'compact': portal.settings.compact}"
+             ng-include="'/Home/Sidebar'"></div>
+        <div class="main-content">
+            <div class="main-content-inner">
+                <div class="breadcrumbs" ng-class="{'breadcrumbs-fixed': portal.settings.breadcrumbs}">
+                    <ui-breadcrumb home="'fa fa-home'"></ui-breadcrumb>
+                    <div class="nav-search" id="nav-search">
+                        <form class="form-search">
+                            <span class="input-icon">
+                                <input type="text" placeholder="Search ..." class="nav-search-input" autocomplete="off" ng-model="typeaheadSelected" uib-typeahead="state.name for state in getCommonData('states') | filter:$viewValue | limitTo:8">
+                                <i class="ace-icon fa fa-search nav-search-icon"></i>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+                <div class="page-content">
+                    <ui-view ng-show="!viewContentLoading"></ui-view>
+                </div>
+            </div>
+        </div>
+        @*<div class="footer" ng-include="'/tests/layouts/default/partial/footer.html'"></div>
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>*@
+    </div>
+    <div id="pin_toast_container"><div id="pin_toast"></div></div>
+    <div ng-show="viewContentLoading" class="ajax-loading-overlay ajax-overlay-body"><i class="ajax-loading-icon fa fa-spin fa-spinner fa-2x orange"></i> </div>
+
+    <script src="/Assets/components/jquery/jquery.min.js"></script>
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement) document.write("<script src='/Assets/components/jquery/jquery.mobile.custom.js'>" + "<" + "/script>");
+        // 加载需要用到的枚举类型
+        if (!window.Enum) Enum = {};
+        @(Html.GetEnum<ActionCategory>())
+        @(Html.GetEnum<ExamQuestionCategory>())
+        @(Html.GetEnum<FileType>())
+        @(Html.GetEnum<FileTypeOption>())
+        @(Html.GetEnum<JoinStatus>())
+        @(Html.GetEnum<MsgDispatchType>())
+        @(Html.GetEnum<NoticeCategory>())
+        @(Html.GetEnum<NoticeType>())
+        @(Html.GetEnum<QuestionnaireQuestionCategory>())
+        @(Html.GetEnum<SystemConfigKeys>())
+        @(Html.GetEnum<TaskBelongTo>())
+        @(Html.GetEnum<TaskCategory>())
+        @(Html.GetEnum<SingleTaskCategory>())
+        @(Html.GetEnum<TrainingStatus>())
+        @(Html.GetEnum<UserQuestionStatus>())
+        @(Html.GetEnum<UserTaskStatus>())
+        @(Html.GetEnum<KnowledgeCategory>())
+        @(Html.GetEnum<LegalStatus>())
+        @(Html.GetEnum<LinkedCategory>())
+    </script>
+
+    @if (ViewBag.UserPermission != null)
+    {
+        <text>
+            <script type="text/javascript">
+                window.sessionStorage.setItem('permissions', JSON.stringify(@Html.Raw(Json.Encode(ViewBag.UserPermission))));
+            </script>
+        </text>
+    }
+
+    @Scripts.Render("~/Assets/js")
+    @Scripts.Render("~/Assets/ng")
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+﻿<#@ assembly name="System.Configuration" #>
+<#@ import namespace="System.Configuration" #>
+<#+
+// NOTE: you may need to copy this file as GetCurrentDirectory() is always returning the directory of this file.
+
+bool DoesFileExist(string filename)
+{			
+	return File.Exists(Path.Combine(GetCurrentDirectory(),filename));	
+}
+
+string OutputFile(string filename)
+{
+	using(StreamReader sr = new StreamReader(Path.Combine(GetCurrentDirectory(),filename)))
+	{
+		string contents = sr.ReadToEnd();
+		return contents;
+	}
+}
+
+string GetCurrentDirectory()
+{
+	string executingDirectoryName = "";
+	string stackTraceFileName = new StackTrace(true).GetFrame(0).GetFileName();
+	if (String.IsNullOrEmpty(stackTraceFileName))
+	{
+		throw new ArgumentException("No value was specified for the 'directoryName' configuration parameter" +
+			", and we could not figure out the file name from the stack trace (most likely because of running " +
+			"the template with debug='False' specified in the <\u0023@ template \u0023> directive.");
+	}
+	else
+	{		
+		executingDirectoryName = Path.GetDirectoryName(stackTraceFileName);
+	}	
+	return executingDirectoryName;
+}
+
+string FindEDMXFileName(string path = ".")
+{
+	string edmxFile = "";
+				
+	string[] entityFrameworkFiles = Directory.GetFiles(Path.Combine(GetCurrentDirectory(), path), "*.edmx");
+	if(entityFrameworkFiles.Length > 0)
+		edmxFile = entityFrameworkFiles[0];
+	
+	return edmxFile;
+}
+
+string FindAppConfig()
+{
+	var di = new DirectoryInfo(GetCurrentDirectory());
+	while(true) {
+		var appConfigFile = Path.Combine(di.FullName, "app.config");
+		if (File.Exists(appConfigFile)) return appConfigFile;
+		if (di.Parent == null) return null;
+		di = di.Parent;
+	}
+}
+
+Configuration OpenAnyConfigFile(string configFile)
+{
+    var map = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
+    var config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+    return config;
+}
+
+string GetConnectionString(string connectionName)
+{
+	var configFile= FindAppConfig();
+	var config = OpenAnyConfigFile(configFile);
+	return config.ConnectionStrings.ConnectionStrings[connectionName].ConnectionString;
+}
+#>

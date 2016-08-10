@@ -1,0 +1,75 @@
+﻿<div>
+    <div widget-box class="widget-box transparent">
+        <div class="widget-header widget-header-flat">
+            <h4 class="widget-title lighter">
+                <i class="fa fa-question-circle orange"></i>
+                {{question.Title}}
+            </h4>
+            <div class="widget-toolbar">
+                <a href="" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <div class="space-2"></div>
+                
+                <div class="comments" ace-scroll options="{'size': 300}">
+                    <div class="itemdiv commentdiv">
+                        <div class="user" ng-if="question.UserAvatar">
+                            <img alt="{{question.UserName}}'s Avatar" ng-src="{{question.UserAvatar}}" />
+                        </div>
+                        
+                        <div class="body">
+                            <div class="name"><a href="" ng-bind="question.UserName"></a></div>
+                            <div class="time"><i class="ace-icon fa fa-clock-o"></i> <span class="green" ng-bind="question.AskTime | date: 'yyyy-MM-dd HH:mm'"></span></div>
+                            <div class="text">
+                                <i class="ace-icon fa fa-quote-left"></i> <span ng-bind="question.Question"></span> 
+                                <i class="ace-icon fa fa-quote-right" style="color:#DCE3ED;margin-left:4px"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.widget-main -->
+        </div><!-- /.widget-body -->
+    </div><!-- /.widget-box -->
+
+    <div widget-box class="widget-box transparent">
+        <div class="widget-header widget-header-flat">
+            <div class="widget-toolbar">
+                <h4 class="widget-title lighter">
+                    <i class="fa fa-comment green"></i>
+                    管理员 回复
+                </h4>
+            </div>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <div class="space-2"></div>
+                
+                <div class="dialogs" ace-scroll options="{'size': 300}">
+                    <div class="itemdiv dialogdiv">
+                        <div class="user" ng-if="question.ReplierAvater">
+                            <img alt="{{question.ReplierName}}'s Avatar" ng-src="{{question.ReplierAvater}}" />
+                        </div>
+                        
+                        <div class="body">
+                            <div class="time"><i class="ace-icon fa fa-clock-o"></i> <span class="blue" ng-bind="question.AnswerTime | date: 'yyyy-MM-dd HH:mm'"></span></div>
+                            <div class="name"><a href="" ng-bind="question.ReplierName"></a></div>
+                            <div class="text" ng-bind="question.Answer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.widget-main -->
+        </div><!-- /.widget-body -->
+    </div><!-- /.widget-box -->
+ 
+    <div class="clearfix form-actions" ng-if="question.Status == Enum.UserQuestionStatus.Resolved.Key">
+        <div class="col-md-offset-4 col-md-9">
+            <button class="btn btn-info" type="button" ng-click="addToKnowledge()"><i class="ace-icon fa fa-check bigger-110"></i> 添加到知识库</button>
+        </div>
+    </div>
+ </div>

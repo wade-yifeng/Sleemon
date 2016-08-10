@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[SystemConfig]
+(
+	[Id]				INT				NOT NULL PRIMARY KEY IDENTITY(1, 1),
+	[Type]				NVARCHAR(100)	NOT NULL,
+	[Value]				NVARCHAR(200)	NOT NULL,
+	[Seq]				INT				NOT NULL,
+	[Description]		NVARCHAR(500)	NOT NULL,
+	[LastUpdateUser]	NVARCHAR(200)	NOT NULL,
+	[LastUpdateTime]	DATETIME		NOT NULL DEFAULT(GETUTCDATE()),
+	[IsActive]			BIT				NOT NULL DEFAULT(1)
+)
+GO

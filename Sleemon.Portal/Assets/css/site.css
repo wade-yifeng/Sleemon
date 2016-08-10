@@ -1,0 +1,211 @@
+﻿/******************* CSS Clean ****************/
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a img {
+    border: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.clear {
+    clear: both;
+}
+
+
+/********************* Common ******************/
+textarea {
+    padding: 5px 4px 6px !important;
+    resize: none;
+}
+
+#pin_toast_container {
+    z-index: 1060;
+    display: none;
+    position: fixed;
+    width: 100%;
+    bottom: 100px;
+}
+
+#pin_toast {
+    width: 400px;
+    height: auto;
+    margin: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, .8);
+    border-radius: 5px;
+    box-shadow: 0 0 24px -1px #383838;
+    text-align: center;
+    color: #f0f0f0;
+}
+
+
+/******************** 问卷管理 ******************/
+.exam-detail .alert-success,
+.questionnaire-detail .alert-success {
+    padding: 7px 10px;
+    margin-bottom: 0;
+}
+
+.exam-detail .row,
+.questionnaire-detail .row {
+    height: 0;
+    overflow: hidden;
+    -webkit-transition: height 0.5s linear;
+    transition: height 0.5s linear;
+}
+
+#waterfall-loading {
+    display: none;
+}
+
+.questionnaire-detail .form-actions {
+    margin-top: 0;
+}
+
+.data_image {
+    width: 100%;
+    border-radius: 2px;
+}
+
+.choice-item .data_image {
+    width: calc(100% - 16px);
+    margin-left: 16px;
+}
+
+
+/*******************资讯编辑******************/
+.notice_preview {
+    max-width: 350px;
+    min-width: 300px;
+}
+
+    .notice_preview .tag_mid {
+        display: inline-block;
+        width: 32px;
+        height: 16px;
+        line-height: 14px;
+        padding: 0 2px 0 3px;
+        border: 1px solid #979797;
+        border-radius: 2px;
+        font-size: 11px;
+        color: #bbbbbb;
+    }
+
+.notice_detail #title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.notice_detail #neck * {
+    position: relative;
+    float: right;
+    margin-right: 5px;
+}
+
+.notice_detail #neck .time {
+    margin-top: 2px;
+    float: left;
+    color: #bbbbbb;
+}
+
+.notice_detail #neck .type {
+    float: left;
+    margin: 3px 0 0 5px;
+}
+
+.notice_detail #neck img {
+    width: 20px;
+    height: 20px;
+}
+
+.notice_detail #neck .comments {
+    margin-top: 1px;
+    font-size: 13px;
+    color: #04be02;
+}
+
+.notice_detail #body img {
+    width: 100%;
+    margin: 5px 0;
+}
+
+#up_and_down .icon, #up_and_down .count {
+    float: left;
+    width: 50px;
+    height: 50px;
+    margin: 15px 0 10px;
+    text-align: center;
+    line-height: 50px;
+}
+
+#up_and_down .down_count, #up_and_down .down_icon {
+    float: right;
+}
+
+#up_and_down .up_icon, #up_and_down .down_icon {
+    border-radius: 25px;
+    background: url(/Assets/images/up.png) #f74b4c;
+    background-size: 50px 50px;
+}
+
+#up_and_down .up_icon {
+    margin-left: 35px;
+}
+
+#up_and_down .down_icon {
+    margin-right: 35px;
+    background: url(/Assets/images/down.png) #326fd3;
+    background-size: 50px 50px;
+}
+
+.write_comment {
+    margin: 15px 0 5px;
+    padding: 10px;
+    background: #fbfbfb;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+}
+
+    .write_comment textarea {
+        width: 100%;
+        height: 55px;
+        margin-bottom: 2px;
+        padding: 5px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .1) inset;
+        resize: none;
+        overflow: hidden;
+    }
+
+    .write_comment a {
+        float: right;
+        width: 45px;
+        height: 30px;
+        margin: 5px 0 0 5px;
+        text-align: center;
+        line-height: 30px;
+        border: none;
+        background: transparent;
+    }
+
+    .write_comment .btn_comment {
+        background: #1472cf;
+        background: -webkit-linear-gradient(top, #1d7fe2, #0865c2);
+        background: linear-gradient(to bottom, #1d7fe2, #0865c2);
+        border-radius: 5px;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, .2) inset, 0 1px 0 rgba(0, 0, 0, .2);
+        color: #ffffff;
+    }

@@ -1,0 +1,37 @@
+﻿@using Sleemon.Portal.Common
+<div class="navbar-container" ng-class="{'container': portal.settings.container}">
+    <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+        <span class="sr-only">Toggle sidebar</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-header pull-left">
+        <a href="#" class="navbar-brand">
+            <small>
+                <i class="fa fa-leaf"></i>
+                喜临门学习（培训）管理系统
+            </small>
+        </a>
+    </div>
+    <div class="navbar-buttons navbar-header pull-right" role="navigation">
+        <ul class="nav ace-nav">
+            <li uib-dropdown class="purple"></li>
+            <li uib-dropdown class="light-blue">
+                <a href="" uib-dropdown-toggle class="dropdown-toggle">
+                    <img class="nav-user-photo" ng-src="@User.Identity.AsClaimsIdentity().GetAvatar()" alt="头像" />
+                    <span class="user-info">
+                        <small>欢迎，</small> @User.Identity.Name
+                    </span>
+                    <i class="ace-icon fa fa-caret-down"></i>
+                </a>
+                <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                    <li><a href=""><i class="ace-icon fa fa-cog"></i> 设置</a></li>
+                    <li><a href="#/profile"><i class="ace-icon fa fa-user"></i> 个人中心</a></li>
+                    <li class="divider"></li>
+                    <li><a href=""><i class="ace-icon fa fa-power-off"></i> 注销</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

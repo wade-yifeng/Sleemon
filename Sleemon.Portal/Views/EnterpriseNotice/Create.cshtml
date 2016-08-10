@@ -1,0 +1,104 @@
+﻿<div class="page-header">
+    <h1>
+        问卷管理
+        <small><i class="ace-icon fa fa-angle-double-right"></i> 问卷列表</small>
+    </h1>
+</div>
+
+<div class="notice_edit col-xs-12 col-sm-8">
+    <div class="widget-box">
+        <div class="widget-header">
+            <h4 class="widget-title">资讯编辑</h4>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main">
+                <div>
+                    <label>标题 (必填,最多15个字)</label>
+                    <input type="text" class="form-control" placeholder="输入标题..." maxlength="15" ng-model="notice.Subject">
+                </div>
+                <hr>
+                <div>
+                    <label>资讯类型</label>
+                    <select class="form-control" ng-model="notice.NoticeType" ng-options="v.Key as v.Value for (k,v) in Enum.NoticeType">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+                <hr>
+                <div>
+                    <label>显示类型</label>
+                    <select class="form-control" ng-model="notice.Category" ng-options="v.Key as v.Value for (k,v) in Enum.NoticeCategory">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+                <hr>
+                <div>
+                    <label>封面图片 (请上传600x420像素或相同比例的图片以达到最佳显示效果,图片大小不要超过2MB)</label>
+                    <input type="file" accept="image/*" ace-fileinput
+                           options="fields.fileInputOptions"
+                           props="fields.fileInputProps"
+                           ng-model="notice.fileInput"
+                           on-change="noticeImageChanged" />
+                </div>
+                <hr>
+                <div>
+                    <label>摘要 (选填,如果不填写会默认抓取正文前35个字)</label>
+                    <textarea class="form-control" placeholder="输入摘要..." maxlength="35" ng-model="notice.Summary"></textarea>
+                </div>
+                <hr>
+                <div>
+                    <label>正文</label>
+                    <script id="editor" type="text/plain" style="width:100%;height:500px;">
+                    </script>
+                    <input type="hidden" id="context" ng-model="notice.Context" />
+                </div>
+                <div class="form-actions center">
+                    <button type="submit" class="btn btn-sm btn-success" ng-click="submitNotice()">
+                        提交
+                        <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="notice_preview col-xs-12 col-sm-4">
+    <div class="widget-box">
+        <div class="widget-header">
+            <h4 class="widget-title">资讯详情微信端预览</h4>
+        </div>
+
+        <div class="notice_detail widget-body">
+            <div class="content widget-main">
+
+                <div ng-bind="notice.Subject?notice.Subject:'还未输入标题'"></div>
+                <div id="neck">
+                    <div class="time">2016-5-23 22:57:49</div>
+                    <div class="type tag_mid" ng-bind="getEnumByValue(Enum.NoticeType,notice.NoticeType).Value"></div>
+                    <img src="/Assets/images/comments.png">
+                    <span class="comments">23</span>
+                </div>
+                <div id="body">
+                    <img ng-src="{{notice.AvatarPath?notice.AvatarPath:'/Assets/images/no_notice_avatar.png'}}">
+                    <div id="content">还未编辑正文</div>
+                </div>
+                <div id="up_and_down">
+                    <div class="up_icon icon"></div>
+                    <div class="up_count count">3</div>
+                    <div class="down_icon icon"></div>
+                    <div class="down_count count">3</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="write_comment">
+                    <textarea placeholder="写下你的评论..."></textarea>
+                    <div class="buttons">
+                        <a class="btn_comment">评论</a>
+                        <a class="btn_cancel">取消</a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

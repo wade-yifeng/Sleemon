@@ -1,0 +1,132 @@
+﻿<div class="questionnaire-detail">
+    <div class="page-header">
+        <h1>
+            培训详情
+            <small><i class="ace-icon fa fa-angle-double-right"></i> 新增/编辑 培训</small>
+        </h1>
+    </div>
+
+    <form class="form-horizontal">
+        <h3 class="header smaller lighter blue"><span class="col-sm-2"></span>培训基本信息</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">培训名称</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.Subject"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">描述</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.Description"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">地点</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.Location"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">是否需签到</label>
+            <div class="col-sm-2">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.IsCheckInNeeded?'是':'否'"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">开始时间</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.StartFrom"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">结束时间</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.EndTo"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">当前状态</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="getEnumByValue(Enum.ActionCategory,training.Status).Value"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">是否公开</label>
+            <div class="col-sm-2">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.IsPublic?'是':'否'"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">最后更新人</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.LastUpdateUserName"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">最后更新时间</label>
+            <div class="col-sm-8">
+                <p class="alert alert-success col-xs-12 col-sm-9" ng-bind="training.LastUpdateTime"></p>
+            </div>
+        </div>
+
+        <h3 class="header smaller lighter blue"><span class="col-sm-2"></span>培训所属任务</h3>
+        <div ng-repeat="group in training.Tasks">
+            <div class="form-group" ng-if="group.TaskCategory==Enum.TaskCategory.CheckIn.Key">
+                <label class="col-sm-3 control-label no-padding-right"><span class="label label-xlg label-green arrowed-in arrowed-in-right">签到</span></label>
+                <div class="col-sm-8">
+                    <div class="widget-box col-xs-12 col-sm-9">
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <p class="alert alert-info" ng-bind="group.Title"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" ng-if="group.TaskCategory==Enum.TaskCategory.Learning.Key && group.LearningFiles.length>0">
+                <label class="col-sm-3 control-label no-padding-right"><span class="label label-xlg label-light arrowed-in arrowed-in-right">课程</span></label>
+                <div class="col-sm-8">
+                    <div class="widget-box col-xs-12 col-sm-9">
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <p class="alert alert-info" ng-repeat="learning in group.LearningFiles" ng-bind="learning.Subject"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" ng-if="group.TaskCategory==Enum.TaskCategory.Exam.Key && group.Exams.length>0">
+                <label class="col-sm-3 control-label no-padding-right"><span class="label label-xlg label-yellow arrowed-in arrowed-in-right">考试</span></label>
+                <div class="col-sm-8">
+                    <div class="widget-box col-xs-12 col-sm-9">
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <p class="alert alert-info" ng-repeat="exam in group.Exams" ng-bind="exam.Title"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" ng-if="group.TaskCategory==Enum.TaskCategory.Questionnaire.Key && group.Questionnaires.length>0">
+                <label class="col-sm-3 control-label no-padding-right"><span class="label label-xlg label-grey arrowed-in arrowed-in-right">问卷</span></label>
+                <div class="col-sm-8">
+                    <div class="widget-box col-xs-12 col-sm-9">
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <p class="alert alert-info" ng-repeat="questionnaire in group.Questionnaires" ng-bind="questionnaire.Title"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                <button class="btn btn-info" type="button" ui-sref="Training.Training">
+                    返回培训列表
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

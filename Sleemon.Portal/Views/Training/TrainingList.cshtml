@@ -1,0 +1,64 @@
+﻿<div class="page-header">
+    <h1>
+        培训管理
+        <small><i class="ace-icon fa fa-angle-double-right"></i> 培训列表</small>
+    </h1>
+</div>
+
+<div>
+    <div class="nav-search">
+        <button class="btn btn-sm btn-danger" style="height:36px;margin-right:0px">
+            <i class="ace-icon glyphicon glyphicon-plus"></i> 新建培训
+        </button>
+    </div>
+    <div class="table-header">
+        培训列表筛选结果
+    </div>
+
+    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"
+           class="table table-striped table-bordered table-hover row-border hover">
+        <thead>
+            <tr>
+                <th>培训名称</th>
+                <th>地点</th>
+                <th>最大报名人数</th>
+                <th>是否公开</th>
+                <th>最后更新人</th>
+                <th><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>最后更新时间</th>
+                <th class='hidden-480'>状态</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="item in list" ng-class="{'selected': domain.selected}">
+                <td ng-bind="item.Subject"></td>
+                <td ng-bind="item.Location"></td>
+                <td ng-bind="item.MaxParticipant"></td>
+                <td ng-bind="item.IsPublic?'是':'否'"></td>
+                <td ng-bind="item.LastUpdateUserName"></td>
+                <td ng-bind="item.LastUpdateTime"></td>
+                <td class='hidden-480'>
+                    <span ng-if="item.Status == Enum.ActionCategory.Publish.Key"
+                          class='label label-sm label-info arrowed arrowed-righ'>已发布</span>
+                    <span ng-if="item.Status == Enum.ActionCategory.Save.Key"
+                          class='label label-sm label-success arrowed-in'>已保存</span>
+                    <span ng-if="item.Status == Enum.ActionCategory.Confirmed.Key"
+                          class="label label-sm label-inverse arrowed-in ng-scope">已确认报名</span>
+                </td>
+                <td>
+                    <div class='hidden-sm hidden-xs action-buttons'>
+                        <a class="blue ng-scope" ui-sref="Training.Training.Detail({trainingId: {{item.TrainingId}}})"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
+                        <a ng-if="item.Status == Enum.ActionCategory.Save.Key && item.LastUpdateUser == @ViewBag.UserUniqueId"
+                           class="green" ui-sref="Training.Training.Create({trainingId: {{item.TrainingId}}})">
+                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                        </a>
+                        <a ng-if="item.Status == Enum.ActionCategory.Save.Key && item.LastUpdateUser == @ViewBag.UserUniqueId"
+                           class="red"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                        <a ng-if="item.Status == Enum.ActionCategory.Publish.Key" class="blue">确认报名</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

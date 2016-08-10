@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleemon.Data", "Sleemon.Data\Sleemon.Data.csproj", "{B9FAD20F-CA92-4812-836D-66FFF949B94C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleemon.Core", "Sleemon.Core\Sleemon.Core.csproj", "{1DF7A7F7-5B7C-4A39-B7C1-EE25231C0581}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleemon.Service", "Sleemon.Service\Sleemon.Service.csproj", "{9CFADC39-E855-437E-B8A1-60F1BF90682E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleemon.Common", "Sleemon.Common\Sleemon.Common.csproj", "{0096F288-F543-44D3-940D-733AFA509A86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleemon.Portal", "Sleemon.Portal\Sleemon.Portal.csproj", "{9B98C8F8-9CDA-4EF5-BD1F-57BA6ED0BAEC}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Sleemon.Database", "Sleemon.Database\Sleemon.Database.sqlproj", "{2B79110E-6CA7-45D6-B937-C2201A812883}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9FAD20F-CA92-4812-836D-66FFF949B94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9FAD20F-CA92-4812-836D-66FFF949B94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9FAD20F-CA92-4812-836D-66FFF949B94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9FAD20F-CA92-4812-836D-66FFF949B94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF7A7F7-5B7C-4A39-B7C1-EE25231C0581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF7A7F7-5B7C-4A39-B7C1-EE25231C0581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF7A7F7-5B7C-4A39-B7C1-EE25231C0581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF7A7F7-5B7C-4A39-B7C1-EE25231C0581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CFADC39-E855-437E-B8A1-60F1BF90682E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CFADC39-E855-437E-B8A1-60F1BF90682E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CFADC39-E855-437E-B8A1-60F1BF90682E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CFADC39-E855-437E-B8A1-60F1BF90682E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0096F288-F543-44D3-940D-733AFA509A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0096F288-F543-44D3-940D-733AFA509A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0096F288-F543-44D3-940D-733AFA509A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0096F288-F543-44D3-940D-733AFA509A86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B98C8F8-9CDA-4EF5-BD1F-57BA6ED0BAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B98C8F8-9CDA-4EF5-BD1F-57BA6ED0BAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B98C8F8-9CDA-4EF5-BD1F-57BA6ED0BAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B98C8F8-9CDA-4EF5-BD1F-57BA6ED0BAEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B79110E-6CA7-45D6-B937-C2201A812883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B79110E-6CA7-45D6-B937-C2201A812883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B79110E-6CA7-45D6-B937-C2201A812883}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2B79110E-6CA7-45D6-B937-C2201A812883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B79110E-6CA7-45D6-B937-C2201A812883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B79110E-6CA7-45D6-B937-C2201A812883}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

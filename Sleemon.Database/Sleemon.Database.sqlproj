@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Sleemon.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{2b79110e-6ca7-45d6-b937-c2201a812883}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Sleemon.Database</RootNamespace>
+    <AssemblyName>Sleemon.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Post" />
+    <Folder Include="Schema" />
+    <Folder Include="Schema\Functions" />
+    <Folder Include="Schema\Store Procedures" />
+    <Folder Include="Schema\Tables" />
+    <Folder Include="Schema\Views" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Schema\Tables\Department.sql" />
+    <Build Include="Schema\Tables\EnterpriseNotice.sql" />
+    <Build Include="Schema\Tables\Exam.sql" />
+    <Build Include="Schema\Tables\ExamChoice.sql" />
+    <Build Include="Schema\Tables\ExamQuestion.sql" />
+    <Build Include="Schema\Tables\GroupSubTask.sql" />
+    <Build Include="Schema\Tables\GroupTask.sql" />
+    <Build Include="Schema\Tables\Keyword.sql" />
+    <Build Include="Schema\Tables\KnowledgeBase.sql" />
+    <Build Include="Schema\Tables\KnowledgeBaseKeyword.sql" />
+    <Build Include="Schema\Tables\LearningFile.sql" />
+    <Build Include="Schema\Tables\MessageDispatch.sql" />
+    <Build Include="Schema\Tables\MessageReceiver.sql" />
+    <Build Include="Schema\Tables\OrderShowFile.sql" />
+    <Build Include="Schema\Tables\Permission.sql" />
+    <Build Include="Schema\Tables\Questionnaire.sql" />
+    <Build Include="Schema\Tables\QuestionnaireItem.sql" />
+    <Build Include="Schema\Tables\StorePatrol.sql" />
+    <Build Include="Schema\Tables\SystemConfig.sql" />
+    <Build Include="Schema\Tables\Task.sql" />
+    <Build Include="Schema\Tables\TaskExam.sql" />
+    <Build Include="Schema\Tables\TaskLearning.sql" />
+    <Build Include="Schema\Tables\TaskQuestionnaire.sql" />
+    <Build Include="Schema\Tables\Training.sql" />
+    <Build Include="Schema\Tables\TrainingTask.sql" />
+    <Build Include="Schema\Tables\User.sql" />
+    <Build Include="Schema\Tables\UserDailySignIn.sql" />
+    <Build Include="Schema\Tables\UserExamAnswer.sql" />
+    <Build Include="Schema\Tables\UserOrderShow.sql" />
+    <Build Include="Schema\Tables\UserPointRecord.sql" />
+    <Build Include="Schema\Tables\UserQuestion.sql" />
+    <Build Include="Schema\Tables\UserQuestionnaireAnswer.sql" />
+    <Build Include="Schema\Tables\UserStorePatrol.sql" />
+    <Build Include="Schema\Tables\UserTask.sql" />
+    <Build Include="Schema\Tables\UserTraining.sql" />
+    <Build Include="Schema\Tables\UserDepartment.sql" />
+    <Build Include="Schema\Store Procedures\spSyncDepartment.sql" />
+    <Build Include="Schema\Store Procedures\spSyncUser.sql" />
+    <Build Include="Schema\Store Procedures\spSyncUserDepartment.sql" />
+    <Build Include="Schema\Tables\UserMoments.sql" />
+    <Build Include="Schema\Tables\UserComments.sql" />
+    <Build Include="Schema\Tables\ProsComments.sql" />
+    <Build Include="Schema\Tables\ProsEnterpriseNotice.sql" />
+    <Build Include="Schema\Tables\ConsEnterpriseNotice.sql" />
+    <Build Include="Schema\Tables\DepartmentEnterpriseNotice.sql" />
+    <Build Include="Schema\Store Procedures\spGetBroadcastMessage.sql" />
+    <Build Include="Schema\Tables\SleemonExceptionLog.sql" />
+    <Build Include="Schema\Tables\Role.sql" />
+    <Build Include="Schema\Tables\RolePermission.sql" />
+    <Build Include="Schema\Tables\UserRole.sql" />
+    <Build Include="Schema\Store Procedures\spGetUserPermissions.sql" />
+    <Build Include="Schema\Store Procedures\spDeleteExamById.sql" />
+    <Build Include="Schema\Store Procedures\spCommitEntireExam.sql" />
+    <Build Include="Schema\Store Procedures\spGetStorePatrolList.sql" />
+    <Build Include="Schema\Store Procedures\spPointStorePatrol.sql" />
+    <Build Include="Schema\Store Procedures\spUpdateTrainingUsersJoinState.sql" />
+    <Build Include="Schema\Store Procedures\spSaveTrainingDetail.sql" />
+    <Build Include="Schema\Tables\LearningCourse.sql" />
+    <Build Include="Schema\Tables\LearningChapter.sql" />
+    <Build Include="Schema\Store Procedures\spDeleteCourseById.sql" />
+    <Build Include="Schema\Tables\QuestionnaireChoice.sql" />
+    <Build Include="Schema\Store Procedures\spDeleteQuestionnaireById.sql" />
+    <Build Include="Schema\Store Procedures\spGetIllegalComments.sql" />
+    <Build Include="Schema\Tables\IllegalCharacters.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Post\PostInitialData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sleemon.Database.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Sleemon.Database.refactorlog" />
+  </ItemGroup>
+</Project>

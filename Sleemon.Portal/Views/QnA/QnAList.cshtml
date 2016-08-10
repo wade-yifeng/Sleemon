@@ -1,0 +1,46 @@
+﻿@using Sleemon.Common
+<div class="page-header">
+    <h1>问答中心 <small><i class="ace-icon fa fa-angle-double-right"></i> 问题列表</small></h1>
+</div>
+
+<div>
+    <div class="table-header">
+        问题列表筛选结果
+    </div>
+
+    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped table-bordered table-hover row-border hover">
+        <thead>
+            <tr>
+                <th>问题</th>
+                <th>提问者</th>
+                <th>提问时间</th>
+                <th>回复者</th>
+                <th><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>回复时间</th>
+                <th>是否解决</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr ng-repeat="ques in ::userQues" ng-class="{'selected': domain.selected}">
+                <td ng-bind="ques.Title"></td>
+                <td ng-bind="ques.UserName"></td>
+                <td ng-bind="ques.AskTime | date: 'yyyy-MM-dd'"></td>
+                <td ng-bind="ques.ReplierName"></td>
+                <td ng-bind="ques.AnswerTime | date: 'yyyy-MM-dd'"></td>
+                <td>
+                    <span ng-if="ques.Status == @((byte)UserQuestionStatus.NotResolved)" class='label label-sm label-info arrowed arrowed-righ'>未解决</span>
+                    <span ng-if="ques.Status == @((byte)UserQuestionStatus.Resolved)" class='label label-sm label-success arrowed-in'>已解决</span>
+                </td>
+                <td>
+                    <div class='hidden-sm hidden-xs action-buttons'>
+                        <a ng-if="ques.Status == @((byte)UserQuestionStatus.Resolved)" class="blue" ui-sref="Graphics.QnA.Detail({questionId: {{ques.QuestionId}}})"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>
+                        <a ng-if="ques.Status == @((byte)UserQuestionStatus.NotResolved)" class="green" ui-sref="Graphics.QnA.Reply({questionId: {{ques.QuestionId}}})"><i class="ace-icon fa fa-pencil bigger-130"></i></a>
+                    </div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

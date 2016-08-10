@@ -1,0 +1,242 @@
+﻿@using Sleemon.Common
+@model IList<Sleemon.Data.GroupTaskListModel>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <section>
+                    <form id="groupTaskListForm">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <div class="form-group">
+                                <label class="col-lg-1 control-label">任务组：</label>
+                                <div class="col-lg-2">
+                                    <input type="text" class="form-control" name="Subject" />
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="search()">查 询</button>
+                            </div>
+                            <input type="hidden" name="PageIndex" id="pageIndex" value="@ViewBag.pageIndex" />
+                            <input type="hidden" name="PageSize" id="pageSize" value="15" />
+                        </div>
+                    </form>
+                </section>
+                <div class="col-lg-2 col-lg-offset-0">
+                    <button type="button" class="btn btn-primary" onclick="create()">创 建</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Count > 0)
+{
+    <input type="hidden" name="totalCount" id="totalCount" value="@Model[0].TotalCount" />
+    <table class="table">
+        <caption>管理任务组列表</caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>任务组名称</th>
+                <th>适用等级</th>
+                <th>是否启用</th>
+                <th>最后更新人</th>
+                <th>最后更新时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        int xh = (i + 1) + ((int)ViewBag.pageIndex - 1) * 15;
+        <tr>
+            <td>@xh</td>
+            <td class="groupTaskId" style="display:none">@Model[i].GroupTaskId</td>
+            <td>@Model[i].Title</td>
+            <td>@Model[i].RequiredGrade</td>
+            <td>@Model[i].LastUpdateUserName</td>
+            <td>@(Model[i].OnOff ? "是" : "否")</td>
+            <td>@Model[i].LastUpdateTime.ToShortDateString()</td>
+            <td>@Sleemon.Common.EnumHelper.GetEnumDescription((ActionCategory)Model[i].Status)</td>
+            <td>
+                <a class="groupTaskDetail" href="#">详情</a>
+                @if (Model[i].LastUpdateUser == ViewBag.CurrentUserId.ToString())
+                {
+                    if (Model[i].Status == (byte)ActionCategory.Save)
+                    {
+                        <a class="editGroupTask" href="#">编辑</a>
+                        <a class="delGroupTask" href="#">删除</a>
+                    }
+                    else if (Model[i].Status == (byte)ActionCategory.Publish)
+                    {
+                        if (Model[i].OnOff)
+                        {
+                            <a class="switchOff" href="#">停用</a>
+                        }
+                        else
+                        {
+                            <a class="switchOn" href="#">启用</a>
+                        }
+
+                    }
+
+                }
+            </td>
+        </tr>
+    }
+            }
+        </tbody>
+    </table>
+    <div id="divPager"></div>
+}
+else
+{
+    <input type="hidden" name="totalCount" id="totalCount" value="0" />
+    <span class="alert alert-danger">没有找到相关记录，请更改搜索条件重试！</span>
+}
+
+<script type="text/javascript" language="javascript">
+    $(document)
+        .ready(function() {
+            $('.delGroupTask')
+                .click(function () {
+                    var id = $(this).parent().siblings('.groupTaskId')[0].innerText;
+                    if (id) {
+                        if (confirm('确定要删除该任务组吗？')) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/GroupTask/DeleteGroupTask",
+                                data: { id: parseInt(id) },
+                                cache: false,
+                                success: function (data) {
+                                    search();
+                                },
+                                error: function (err) {
+                                    return alert('删除失败');
+                                }
+                            });
+                        }
+                    }
+                });
+
+            $('.groupTaskDetail')
+                .click(function() {
+                    var id = $(this).parent().siblings('.groupTaskId')[0].innerText;
+                    if (id) {
+                        $.ajax({
+                            type: "GET",
+                            url: "/GroupTask/Detail",
+                            data: { id: parseInt(id) },
+                            cache: false,
+                            success: function (data) {
+                                $(".col-content").html(data);
+                            },
+                            error: function (err) {
+                                return alert('获取详情失败');
+                            }
+                        });
+                    }
+                });
+
+            $('.editGroupTask')
+                .click(function() {
+                    var id = $(this).parent().siblings('.groupTaskId')[0].innerText;
+                    if (id) {
+                        create(id);
+                    }
+                });
+
+            $('.switchOn')
+                .click(function () {
+                    var id = $(this).parent().siblings('.groupTaskId')[0].innerText;
+                    if (id) {
+                        switchOnOff(id, 1);
+                    }
+                });
+
+            $('.switchOff')
+                .click(function () {
+                    var id = $(this).parent().siblings('.groupTaskId')[0].innerText;
+                    if (id) {
+                        switchOnOff(id, 0);
+                    }
+                });
+        });
+
+
+    function search() {
+        $.ajax({
+            type: "GET",
+            url: "/GroupTask/Index",
+            cache: false,
+            data: $("#groupTaskListForm").serialize(),
+            success: function (data) {
+                $(".col-content").html(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function create(id) {
+        id = id || 0;
+        $.ajax({
+            type: "GET",
+            url: "/GroupTask/GroupTaskCreate",
+            data: { id: parseInt(id) },
+            cache: false,
+            success: function (data) {
+                $(".col-content").html(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function switchOnOff(id, onOff) {
+        id = id || 0;
+        $.ajax({
+            type: "GET",
+            url: "/GroupTask/SwitchStatus",
+            data: { id: parseInt(id), onOff: parseInt(onOff) },
+            cache: false,
+            success: function (data) {
+                search();
+                alert(data.Data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    //分页
+    var options = {
+        bootstrapMajorVersion: 2, //版本
+        currentPage: $("#pageIndex").val(), //当前页数
+        totalPages: $("#totalCount").val() % $("#pageSize").val() == 0 ? $("#totalCount").val() / $("#pageSize").val() : ($("#totalCount").val() / $("#pageSize").val()) + 1, //总页数
+        itemTexts: function (type, page, current) {
+            switch (type) {
+            case "first":
+                return "首页";
+            case "prev":
+                return "上一页";
+            case "next":
+                return "下一页";
+            case "last":
+                return "末页";
+            case "page":
+                return page;
+            }
+        },
+        onPageClicked: function (event, originalEvent, type, page) {
+            $("#pageIndex").val(page);
+            search();
+        }
+    }
+
+    $('#divPager').bootstrapPaginator(options);
+</script>

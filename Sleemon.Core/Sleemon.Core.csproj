@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1DF7A7F7-5B7C-4A39-B7C1-EE25231C0581}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sleemon.Core</RootNamespace>
+    <AssemblyName>Sleemon.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Contracts\ICommentService.cs" />
+    <Compile Include="Contracts\IEnterpriseNoticeService.cs" />
+    <Compile Include="Contracts\IDepartmentService.cs" />
+    <Compile Include="Contracts\IExamService.cs" />
+    <Compile Include="Contracts\IGroupTaskService.cs" />
+    <Compile Include="Contracts\IKnowledgeService.cs" />
+    <Compile Include="Contracts\ILearningFileService.cs" />
+    <Compile Include="Contracts\IOrderShowService.cs" />
+    <Compile Include="Contracts\IPermissionService.cs" />
+    <Compile Include="Contracts\IUserQuestionService.cs" />
+    <Compile Include="Contracts\IQuestionnaireService.cs" />
+    <Compile Include="Contracts\IRolePermissionService.cs" />
+    <Compile Include="Contracts\IRoleService.cs" />
+    <Compile Include="Contracts\IMessageService.cs" />
+    <Compile Include="Contracts\IStorePatrolService.cs" />
+    <Compile Include="Contracts\ITaskService.cs" />
+    <Compile Include="Contracts\ITrainingService.cs" />
+    <Compile Include="Contracts\IUserService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sleemon.Common\Sleemon.Common.csproj">
+      <Project>{0096f288-f543-44d3-940d-733afa509a86}</Project>
+      <Name>Sleemon.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sleemon.Data\Sleemon.Data.csproj">
+      <Project>{B9FAD20F-CA92-4812-836D-66FFF949B94C}</Project>
+      <Name>Sleemon.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

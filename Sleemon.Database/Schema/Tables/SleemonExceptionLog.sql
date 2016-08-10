@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[SleemonExceptionLog]
+(
+	[Id]			INT				NOT NULL PRIMARY KEY IDENTITY(1, 1),
+	[Date]			DATETIME		NOT NULL,
+	[Thread]		NVARCHAR(MAX)	NOT NULL,
+	[Level]			NVARCHAR(255)	NOT NULL,
+	[Logger]		NVARCHAR(255)	NOT NULL,
+	[Message]		NVARCHAR(MAX)	NOT NULL,
+	[Exception]		NVARCHAR(MAX)	NULL
+)

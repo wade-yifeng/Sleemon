@@ -1,0 +1,56 @@
+﻿<div id="editor" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <h4 class="smaller lighter blue no-margin">新增/编辑 课件</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="widget-box">
+                    <div class="widget-body">
+                        <div class="widget-main">
+                                <div>
+                                <label>课件标题</label>
+                                <input type="text" class="form-control" ng-model="file.Subject" />
+                            </div>
+                            
+                            <div class="space-2"></div>
+
+                            <div>
+                                <label>描述</label>
+                                <textarea class="form-control" input-limiter maxlength="200"
+                                            ng-model="file.Description"></textarea>
+                            </div>
+                            
+                            <div class="space-2"></div>
+                            
+                            <div>
+                                <label>课件类型</label>
+                                <input type="radio" class="form-control" name="FileType" ng-model="file.FileType" value="getEnumByValue(Enum.FileTypeOption, file.FileType).Value" />
+                                <input type="radio" class="form-control" name="FileType" ng-model="file.FileType" value="getEnumByValue(Enum.FileTypeOption, file.FileType).Value" />
+                            </div>
+                            
+                            <div>
+                                <label>内容</label>
+                                <div class="col-sm-10 input-group">
+                                    <input type="text" class="form-control" ng-model="file.Content" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default btn-lg uploadFile">上传</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <hr />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" data-dismiss="modal">取消</button>
+                <button class="btn btn-primary" type="button" ng-click="submitLearningFile()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

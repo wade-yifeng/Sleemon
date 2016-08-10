@@ -1,0 +1,3 @@
+SleemonPortal.controller('CourseDetailController', function () {
+    
+});

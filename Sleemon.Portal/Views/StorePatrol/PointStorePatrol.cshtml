@@ -1,0 +1,176 @@
+﻿@model Sleemon.Data.UserStorePatrolPointModel
+@{
+    string endto = Model.taskDetail.EndTo == null ? "" : Model.taskDetail.EndTo.Value.ToShortDateString();
+}
+
+<form id="userStorePatrolForm" >
+    <div class="notice_edit col-xs-12 col-sm-8">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4 class="widget-title">巡店任务评分</h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div>
+                        <input type="hidden" id="hdTaskid" value="@ViewBag.taskid" />
+                        <input type="hidden" id="hdUserTaskid" value="@ViewBag.userTaskId" />
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">用户名：</label>
+                        <label for="form-field-select-1">@Model.UserStorePatrols.UserName</label>
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">任务名称：</label>
+                        <label for="form-field-select-1">@Model.taskDetail.Title</label>
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">开始时间：</label>
+                        <label for="form-field-select-1">@Model.taskDetail.StartFrom.ToShortDateString()</label>
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">结束时间：</label>
+                        <label for="form-field-select-1"></label>
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">任务得分：</label>
+                        <label for="form-field-select-1">@Model.taskDetail.Point</label>
+                    </div>
+                    <div>
+                        <label for="form-field-select-1">任务延期得分：</label>
+                        <label for="form-field-select-1">@Model.taskDetail.OverduePoint</label>
+                    </div>
+                   
+                    @{
+                        if(Model.UserStorePatrols!=null)
+                        {
+                            for (int i = 0; i < Model.UserStorePatrols.PatialModel.Count; i++)
+                            {
+                                string[] picArray = Model.UserStorePatrols.PatialModel[i].FilePath.Split(','); 
+                                <div class="divScences">
+                                    <div>
+                                        <label for="form-field-select-1"> 场景名称：</label>
+                                        <label for="form-field-select-1"> @Model.UserStorePatrols.PatialModel[i].ScenceName</label>
+                                    </div>
+                                    <div style ="border:thick;">
+                                        <div style="padding-top: 10px; padding-bottom: 10px;">
+                                            @for (int j = 0; j < picArray.Length; j++)
+                                            {
+                                                if (!string.IsNullOrEmpty(picArray[j]))
+                                                {
+
+                                                    <label for="form-field-select-1"> 场景图片：</label>
+                                                    <img alt="场景" src="@picArray[j]" />
+                                                }
+                                            }
+                                        </div>
+                                        <div style="padding-top:10px;padding-bottom:10px;">
+                                            <label for="form-field-select-1"> 评分：</label>
+                                            <input type="text" name="txtPoint" value="@Model.UserStorePatrols.PatialModel[i].AdminRate" userstorepatrolid="@Model.UserStorePatrols.PatialModel[i].UserStorePatrolId" />
+                                        </div>
+                                        <div style="padding-top: 10px; padding-bottom: 10px;">
+                                            <label for="form-field-select-1"> 意见：</label>
+                                            <textarea name="txtAdminComment">@Model.UserStorePatrols.PatialModel[i].AdminComment</textarea>
+                                        </div>
+                                    </div>
+                                    </div> 
+                            }
+                        }
+                    }
+                    <div>
+                        <label for="form-field-select-1"> 是否通过：</label>
+                       @{
+                           if (Model.UserStorePatrols.UserTaskStatus ==(short)Sleemon.Common.UserTaskStatus.Completed)
+                           {
+                                  <input type="checkbox" class="chkPass" value="1"  checked="checked"/><span>是</span>
+                        <input type="checkbox" class="chkPass" value="0" /><span>否</span>
+                           }
+                           else if (Model.UserStorePatrols.UserTaskStatus == (short)Sleemon.Common.UserTaskStatus.NotPassed)
+                           {
+                            <input type="checkbox" class="chkPass" value="1" /><span>是</span>
+                        <input type="checkbox" class="chkPass" value="0" checked="checked" /><span>否</span>
+                           }
+                           else
+                           {
+                            <input type="checkbox" class="chkPass" value="1" /><span>是</span>
+                        <input type="checkbox" class="chkPass" value="0" /><span>否</span> 
+                           }
+                       }
+                      
+                    </div>
+                        <div class="form-actions center">
+                            <button type="button" class="btn btn-sm btn-success" onclick="AdminPoin()">
+                                提交
+                                <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                            </button>
+                        </div>
+                        <div class="form-actions center">
+                            @{
+                                if (Model != null)
+                                {
+                                    if (ViewBag.IsSuccess != null)
+                                    {
+                                        if (ViewBag.IsSuccess)
+                                        {
+                                            <span class="success">保存成功！</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="alert alert-danger">保存失败！</span>
+                                        }
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript" language="javascript">
+   
+    function AdminPoin()
+    {
+        var isPass = $('.chkPass:checked').val();
+        var taskid = $('#hdTaskid').val();
+        var userTaskId = $('#hdUserTaskid').val();
+        var userStorePatrol = {
+            userStorePatrolId: "",
+            adminRate: "",
+            adminComment: ""
+        };
+       var userStorePatrols = [];
+       $(".divScences").each(function () {
+           var userStorePatrolId = $(this).find('input').attr('userstorepatrolid');
+           var adminRate = $(this).find('input').val();
+           var adminComment = $(this).find('textarea').val();
+           var userStorePatrolNew = Object.create(userStorePatrol);
+           userStorePatrolNew.userStorePatrolId = userStorePatrolId;
+           userStorePatrolNew.adminRate = adminRate;
+           userStorePatrolNew.adminComment = adminComment;
+           userStorePatrols.push(userStorePatrolNew);
+       });
+       $.ajax({
+           type: "POST",
+           url: "/StorePatrol/PointStorePatrol",
+           cache: false,
+           data: { taskid: taskid, userTaskId: userTaskId, isPass: isPass==1?true:false, userStorePatrols: userStorePatrols },
+           success: function (data) {
+               $(".col-content").html(data);
+           },
+           error: function (err) {
+               console.log(err);
+           }
+       });
+
+    }
+    $("#StartFrom").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    $("#EndTo").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+</script>

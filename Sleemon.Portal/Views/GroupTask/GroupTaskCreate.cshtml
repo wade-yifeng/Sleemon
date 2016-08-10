@@ -1,0 +1,699 @@
+﻿@using Sleemon.Common
+@model Sleemon.Data.GroupTaskDetailModel
+
+<form class="form-horizontal" action='@Url.Action("GroupTaskCreate", "GroupTask")' method="post" id="groupTaskForm">
+    <div class=" notice_edit col-xs-12 col-sm-8">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h4 class="widget-title">新增/编辑 任务组</h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <fieldset>
+                        <legend>基本信息</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                @Html.HiddenFor(u => u.Status, new { id = "groupTaskState" })
+                                @Html.HiddenFor(u => u.GroupTaskId)
+                                @Html.TextBoxFor(u => u.Title, new { @class = "form-control", placeholder = "输入任务组名称...最多50个字", maxlength = "50" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">描述</label>
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(u => u.Description, new { @class = "form-control", placeholder = "最多250个字", maxlength = "250" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">适用等级</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(u => u.RequiredGrade, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions center">
+                        <button type="button" class="btn btn-default btn-sm addLearningTask">添加课程学习任务</button>
+                        <button type="button" class="btn btn-primary btn-sm addExamTask">添加考试任务</button>
+                        <button type="button" class="btn btn-default btn-sm addQuestionnaireTask">添加问卷调查任务</button>
+                    </div>
+                    @if (Model != null && Model.SubTasks != null)
+                    {
+                        for (int i = 0; i < Model.SubTasks.Count; i++)
+                        {
+                            var subTask = Model.SubTasks[i];
+                            <fieldset class="task">
+                                <legend class="task_index">
+                                    <input type="hidden" class="taskIndex" value="@i" />
+                                    <input type="hidden" name="SubTasks[@i].TaskId" value="@subTask.TaskId" />
+                                    <input type="hidden" name="SubTasks[@i].TaskCategory" value="@subTask.TaskCategory" />
+                                    @Sleemon.Common.EnumHelper.GetEnumDescription((TaskCategory)subTask.TaskCategory) 任务
+                                </legend>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">任务名称：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].Title" class="form-control" data-val-required="请输入任务名称" value="@subTask.Title"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">偏移天数：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].OffsetDays" class="form-control" data-val-required="请输入偏移天数" value="@subTask.OffsetDays" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">奖励积分：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].Point" class="form-control" data-val-required="请输入奖励积分" value="@subTask.Point"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">过期完成积分：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].OverduePoint" class="form-control" data-val-required="请输入过期完成积分" value="@subTask.OverduePoint" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">产品能力值：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].ProductAbility" class="form-control" data-val-required="请输入产品能力值" value="@subTask.ProductAbility">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">销售能力值：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].SalesAbility" class="form-control" data-val-required="请输入销售能力值" value="@subTask.SalesAbility" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">陈列能力值：</label>
+                                    <div class="col-sm-10">
+                                        <input name="SubTasks[@i].ExhibitAbility" class="form-control" data-val-required="请输入陈列能力值" value="@subTask.ExhibitAbility" />
+                                    </div>
+                                </div>
+                                @if (subTask.TaskCategory == (byte)TaskCategory.Learning && subTask.LearningFiles != null)
+                                {
+                                    for (int j = 0; j < subTask.LearningFiles.Count; j++)
+                                    {
+                                        <div class="form-group taskItem">
+                                            <label class="col-sm-2 control-label taskItem_index">课程@(j + 1)：</label>
+                                            <div class="col-sm-9 input-group">
+                                                <input class="form-control" type="text" data-val-required="请选择课程资料" data-val="true" value="@subTask.LearningFiles[j].Subject" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-lg chooseLearning" data-toggle="modal" data-target="#chooseModal">选择</button>
+                                                </span>
+                                                <input name="SubTasks[@i].LearningFiles[@j].Id" type="hidden" value="@subTask.LearningFiles[j].Id" />
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="button" class="btn btn-link delTaskItem">删除</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button type="button" class="btn btn-primary btn-xs addLearning">添加课程</button>
+                                }
+                                else if (subTask.TaskCategory == (byte)TaskCategory.Exam && subTask.Exams != null)
+                                {
+                                    for (int j = 0; j < subTask.Exams.Count; j++)
+                                    {
+                                        <div class="form-group taskItem">
+                                            <label class="col-sm-2 control-label taskItem_index">试卷@(j + 1)：</label>
+                                            <div class="col-sm-9 input-group">
+                                                <input class="form-control" type="text" data-val-required="请选择试卷" data-val="true" value="@subTask.Exams[j].Title" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-lg chooseExam" data-toggle="modal" data-target="#chooseModal">选择</button>
+                                                </span>
+                                                <input name="SubTasks[@i].Exams[@j].Id" type="hidden" value="@subTask.Exams[j].Id" />
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="button" class="btn btn-link delTaskItem">删除</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button type="button" class="btn btn-primary btn-xs addExam">添加试卷</button>
+                                }
+                                else if (subTask.TaskCategory == (byte)TaskCategory.Questionnaire && subTask.Questionnaires != null)
+                                {
+                                    for (int j = 0; j < subTask.Questionnaires.Count; j++)
+                                    {
+                                        <div class="form-group taskItem">
+                                            <label class="col-sm-2 control-label taskItem_index">问卷@(j + 1)：</label>
+                                            <div class="col-sm-9 input-group">
+                                                <input class="form-control" type="text" data-val-required="请选择问卷" data-val="true" value="@subTask.Questionnaires[j].Title" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-lg chooseQuestionnaire" data-toggle="modal" data-target="#chooseModal">选择</button>
+                                                </span>
+                                                <input name="SubTasks[@i].Questionnaires[@j].Id" type="hidden" value="@subTask.Questionnaires[j].Id" />
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="button" class="btn btn-link delTaskItem">删除</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button type="button" class="btn btn-primary btn-xs addQuestionnaire">添加问卷</button>
+                                }
+                                <button type="button" class="btn btn-primary btn-xs delTask">删除任务</button>
+                            </fieldset>
+                            <br />
+                        }
+                    }
+                    <div class="form-actions center" id="submitDiv">
+                        <button type="submit" id="btnSave" class="btn btn-sm btn-success">
+                            保存
+                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                        </button>
+                        <button type="submit" id="btnPublish" class="btn btn-sm btn-success">
+                            发布
+                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="tempLearning">
+    <div class="form-group taskItem">
+        <label class="col-sm-2 control-label taskItem_index">课程</label>
+        <div class="col-sm-9 input-group">
+            <input class="form-control" type="text" data-val-required="请选择课程资料" data-val="true" value="" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg chooseLearning" data-toggle="modal" data-target="#learningModal">选择</button>
+            </span>
+            <input name="SubTasks[99].LearningFiles[99].Id" type="hidden" value="" />
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-link delTaskItem">删除</button>
+        </div>
+    </div>
+</div>
+
+<div id="tempExam">
+    <div class="form-group taskItem">
+        <label class="col-sm-2 control-label taskItem_index">试卷</label>
+        <div class="col-sm-9 input-group">
+            <input class="form-control" type="text" data-val-required="请选择试卷" data-val="true" value="" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg chooseExam" data-toggle="modal" data-target="#chooseModal">选择</button>
+            </span>
+            <input name="SubTasks[99].Exams[99].Id" type="hidden" value="" />
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-link delTaskItem">删除</button>
+        </div>
+    </div>
+</div>
+
+<div id="tempQuestionnaire">
+    <div class="form-group taskItem">
+        <label class="col-sm-2 control-label taskItem_index">问卷</label>
+        <div class="col-sm-9 input-group">
+            <input class="form-control" type="text" data-val-required="请选择问卷" data-val="true" value="" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-lg chooseQuestionnaire" data-toggle="modal" data-target="#chooseModal">选择</button>
+            </span>
+            <input name="SubTasks[99].Questionnaires[99].Id" type="hidden" value="" />
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="btn btn-link delTaskItem">删除</button>
+        </div>
+    </div>
+</div>
+
+<div id="tempLearningTask">
+    <fieldset class="task">
+        <legend class="task_index">
+            <input type="hidden" class="taskIndex" value="99" />
+            <input type="hidden" name="Tasks[99].TaskId" value="0" />
+            <input type="hidden" name="Tasks[99].TaskCategory" value="2" />
+            课程学习 任务
+        </legend>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">任务名称：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].Title" class="form-control" data-val-required="请输入任务名称" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">偏移天数：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].OffsetDays" class="form-control" data-val-required="请输入偏移天数" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">奖励积分：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].Point" class="form-control" data-val-required="请输入奖励积分" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">过期完成积分：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].OverduePoint" class="form-control" data-val-required="请输入过期完成积分" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">产品能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].ProductAbility" class="form-control" data-val-required="请输入产品能力值" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">销售能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].SalesAbility" class="form-control" data-val-required="请输入销售能力值" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">陈列能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].ExhibitAbility" class="form-control" data-val-required="请输入陈列能力值" value="" />
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-xs addLearning">添加课程</button>
+        <button type="button" class="btn btn-primary btn-xs delTask">删除任务</button>
+    </fieldset>
+    <br />
+</div>
+
+<div id="tempExamTask">
+    <fieldset class="task">
+        <legend class="task_index">
+            <input type="hidden" class="taskIndex" value="99" />
+            <input type="hidden" name="SubTasks[99].TaskId" value="0" />
+            <input type="hidden" name="SubTasks[99].TaskCategory" value="3" />
+            考试 任务
+        </legend>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">任务名称：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].Title" class="form-control" data-val-required="请输入任务名称" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">偏移天数：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].OffsetDays" class="form-control" data-val-required="请输入偏移天数" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">奖励积分：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].Point" class="form-control" data-val-required="请输入奖励积分" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">过期完成积分：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].OverduePoint" class="form-control" data-val-required="请输入过期完成积分" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">产品能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].ProductAbility" class="form-control" data-val-required="请输入产品能力值" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">销售能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].SalesAbility" class="form-control" data-val-required="请输入销售能力值" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">陈列能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].ExhibitAbility" class="form-control" data-val-required="请输入陈列能力值" value="" />
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-xs addExam">添加试卷</button>
+        <button type="button" class="btn btn-primary btn-xs delTask">删除任务</button>
+    </fieldset>
+    <br />
+</div>
+
+<div id="tempQuestionnaireTask">
+    <fieldset class="task">
+        <legend class="task_index">
+            <input type="hidden" class="taskIndex" value="99" />
+            <input type="hidden" name="SubTasks[99].TaskId" value="0" />
+            <input type="hidden" name="SubTasks[99].TaskCategory" value="5" />
+            问卷调查 任务
+        </legend>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">任务名称：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].Title" class="form-control" data-val-required="请输入任务名称" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">偏移天数：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].OffsetDays" class="form-control" data-val-required="请输入偏移天数" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">奖励积分：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].Point" class="form-control" data-val-required="请输入奖励积分" value=""/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">过期完成积分：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].OverduePoint" class="form-control" data-val-required="请输入过期完成积分" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">产品能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].ProductAbility" class="form-control" data-val-required="请输入产品能力值" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">销售能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].SalesAbility" class="form-control" data-val-required="请输入销售能力值" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">陈列能力值：</label>
+            <div class="col-sm-10">
+                <input name="SubTasks[99].ExhibitAbility" class="form-control" data-val-required="请输入陈列能力值" value="" />
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-xs addQuestionnaire">添加问卷</button>
+        <button type="button" class="btn btn-primary btn-xs delTask">删除任务</button>
+    </fieldset>
+    <br />
+</div>
+
+<div class="modal fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btnSaveItem">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="javascript">
+    var fileTitle;
+    var fileId;
+
+    $(document)
+        .ready(function () {
+            $('#tempLearning').hide();
+            $('#tempExam').hide();
+            $('#tempQuestionnaire').hide();
+            $('#tempLearningTask').hide();
+            $('#tempExamTask').hide();
+            $('#tempQuestionnaireTask').hide();
+
+            $('div.widget-main')
+                .on('click',
+                    '.chooseLearning',
+                    function () {
+                        fileTitle = $(this).parent().prev();
+                        fileId = $(this).parent().next();
+                        showModal(1);
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.chooseExam',
+                    function () {
+                        fileTitle = $(this).parent().prev();
+                        fileId = $(this).parent().next();
+                        showModal(2);
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.chooseQuestionnaire',
+                    function () {
+                        fileTitle = $(this).parent().prev();
+                        fileId = $(this).parent().next();
+                        showModal(3);
+                    });
+
+            function showModal(category) {
+                var data = {
+                    PageIndex: 1,
+                    PageSize: 15
+                };
+                if (category === 1) {
+                    $('#myModalLabel')[0].innerText = "选择课程资料";
+                    data.TaskCategory = 2;
+                } else if (category === 2) {
+                    $('#myModalLabel')[0].innerText = "选择试题";
+                    data.TaskCategory = 3;
+                } else if (category === 3) {
+                    $('#myModalLabel')[0].innerText = "选择问卷";
+                    data.TaskCategory = 5;
+                }
+
+                $.ajax({
+                    async: false,
+                    type: "GET",
+                    url: "/Training/GetTaskItemList",
+                    cache: false,
+                    data: data,
+                    success: function (data) {
+                        $(".modal-body").html(data);
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            $('#btnSaveItem')
+                .click(function () {
+                    var item = $("input[name='ItemId']:checked");
+                    fileId.val(item.val());
+                    fileTitle.val(item.parent().next()[0].innerText);
+                });
+
+            $('#btnSave')
+                .click(function() {
+                    $('#groupTaskState').val(1);
+                    submitForm();
+                    return false;
+                });
+
+            $('#btnPublish')
+                .click(function () {
+                    $('#groupTaskState').val(2);
+                    submitForm();
+                    return false;
+                });
+
+            function submitForm() {
+                $.ajax({
+                    type: "POST",
+                    url: "/GroupTask/GroupTaskCreate",
+                    data: $("#groupTaskForm").serialize(),
+                    cache: false,
+                    success: function (data) {
+                        $(".col-content").html(data);
+                    },
+                    error: function (err) {
+                        return alert('提交失败');
+                    }
+                });
+            }
+
+            $('div.widget-main')
+                .on('click',
+                    '.delTaskItem',
+                    function() {
+                        $(this)
+                            .parent()
+                            .parent()
+                            .siblings('.taskItem')
+                            .each(function (i) {
+                                $(this).children('.taskItem_index')[0]
+                                    .innerText = $(this).children('.taskItem_index')[0].innerText.substring(0, 2) +
+                                    (i + 1) +
+                                    '：';
+                                $(this)
+                                    .children()
+                                    .children('[name^=SubTasks]')
+                                    .each(function() {
+                                        var start = $(this)[0].name.lastIndexOf('[');
+                                        var end = $(this)[0].name.lastIndexOf(']');
+                                        $(this)[0].name = $(this)[0].name.substring(0, start + 1) +
+                                            i +
+                                            $(this)[0].name.substring(end);
+                                    });
+                            });
+
+                        var choice = $(this).parent().parent()[0];
+                        choice.parentNode.removeChild(choice);
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.addLearning',
+                    function() {
+                        addTaskItem(1, this);
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.addExam',
+                    function () {
+                        addTaskItem(2, this);
+                    });
+
+            $('div.widget-main')
+                .on('click',
+                    '.addQuestionnaire',
+                    function () {
+                        addTaskItem(3, this);
+                    });
+
+            function addTaskItem(type, obj) {
+                var template;
+
+                if (type === 1) {
+                    template = $('#tempLearning');
+                } else if (type === 2) {
+                    template = $('#tempExam');
+                } else if (type === 3) {
+                    template = $('#tempQuestionnaire');
+                }
+
+                if (template) {
+                    $(obj).before(template[0].innerHTML);
+
+                    var j = $(obj).siblings('.task_index').children('.taskIndex').val();
+                    var i = $(obj).siblings('.taskItem').length;
+                    $(obj).prev().children('.taskItem_index')[0]
+                        .innerText = $(obj).prev().children('.taskItem_index')[0].innerText + i + '：';
+
+                    $(obj)
+                        .prev()
+                        .children()
+                        .children('[name^=SubTasks]')
+                        .each(function () {
+                            var firstend = $(this)[0].name.indexOf(']');
+                            var start = $(this)[0].name.lastIndexOf('[');
+                            var end = $(this)[0].name.lastIndexOf(']');
+
+                            $(this)[0].name = 'SubTasks[' +
+                                j +
+                                $(this)[0].name.substring(firstend, start + 1) +
+                                (i - 1) +
+                                $(this)[0].name.substring(end);
+                        });
+                }
+            }
+
+            $('div.widget-main')
+                .on('click',
+                    '.delTask',
+                    function() {
+                        $(this)
+                            .parent()
+                            .siblings('.task')
+                            .each(function(i) {
+                                $(this).children('.task_index').children('.taskindex').val(i);
+                                $(this)
+                                    .children('.task_index')
+                                    .children('[name^=SubTasks]')
+                                    .each(function() {
+                                        var end = $(this)[0].name.indexOf(']');
+                                        $(this)[0].name = 'SubTasks[' +
+                                            i +
+                                            $(this)[0].name.substring(end);
+                                    });
+
+                                $(this)
+                                    .children()
+                                    .children()
+                                    .children('[name^=SubTasks]')
+                                    .each(function() {
+                                        var end = $(this)[0].name.indexOf(']');
+                                        $(this)[0].name = 'SubTasks[' +
+                                            i +
+                                            $(this)[0].name.substring(end);
+                                    });
+                            });
+
+                        var task = $(this).parent()[0];
+                        var br = $(this).parent().next()[0];
+                        task.parentNode.removeChild(task);
+                        br.parentNode.removeChild(br);
+                    });
+
+            $('.addLearningTask')
+                .click(function () {
+                    addTask(1, this);
+                });
+
+            $('.addExamTask')
+                .click(function () {
+                    addTask(2, this);
+                });
+
+            $('.addQuestionnaireTask')
+                .click(function () {
+                    addTask(3, this);
+                });
+
+            function addTask(type, obj) {
+                var template;
+
+                if (type === 1) {
+                    template = $('#tempLearningTask');
+                } else if (type === 2) {
+                    template = $('#tempExamTask');
+                } else if (type === 3) {
+                    template = $('#tempQuestionnaireTask');
+                }
+
+                if (template) {
+                    $('#submitDiv').before(template[0].innerHTML);
+
+                    var i = $(obj).parent().siblings('.task').length;
+                    $('#submitDiv').prev().prev().children('.task_index').children('.taskIndex').val(i - 1);
+                    $('#submitDiv')
+                        .prev()
+                        .prev()
+                        .children('.task_index')
+                        .children('[name^=SubTasks]')
+                        .each(function() {
+                            var end = $(this)[0].name.indexOf(']');
+                            $(this)[0].name = 'SubTasks[' +
+                                (i - 1) +
+                                $(this)[0].name.substring(end);
+                        });
+
+                    $('#submitDiv')
+                        .prev()
+                        .prev()
+                        .children()
+                        .children()
+                        .children('[name^=SubTasks]')
+                        .each(function () {
+                            var end = $(this)[0].name.indexOf(']');
+                            $(this)[0].name = 'SubTasks[' +
+                                (i - 1) +
+                                $(this)[0].name.substring(end);
+                        });
+                }
+            }
+        });
+</script>

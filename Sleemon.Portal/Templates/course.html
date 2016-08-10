@@ -1,0 +1,73 @@
+﻿<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                <li ng-repeat="chapter in ::chapters" class="dd-item dd-nodrag course-chapter">
+                    <div class="dd-handle">
+                        {{chapter.Title}}
+                        <div class="pull-right action-buttons">
+                            <a class="blue" ng-click="editChapter(chapter)">
+                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                            </a>
+                            <a class="red" href="#">
+                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <ol class="dd-list">
+                        <li ng-repeat="file in ::chapter.Files" class="dd-item item-orange course-file">
+                            <div class="dd-handle">
+                                {{file.Subject}}
+                                <div class="pull-right action-buttons">
+                                    <a class="blue" ng-click="showFileEditor(file)" title="课件详情">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+                                    <a class="blue" ng-click="editFile(file)" title="编辑">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="#" title="删除">
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div ng-if="chapterDetail" class="col-xs-12 col-sm-4">
+        <div class="space visible-xs"></div>
+        <h4 class="header blue lighter less-margin" ng-bind="chapterDetail.Title"></h4>
+        <div class="space-6"></div>
+        <form>
+            <fieldset>
+                <textarea class="width-100" resize="none" placeholder="输入章的名称..."></textarea>
+            </fieldset>
+            <div class="hr hr-dotted"></div>
+            <div class="clearfix">
+                <button class="pull-right btn btn-sm btn-primary btn-white btn-round" type="button">
+                    提交
+                    <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div ng-if="fileDetail" class="col-xs-12 col-sm-4">
+        <div class="space visible-xs"></div>
+        <h4 class="header blue lighter less-margin" ng-bind="fileDetail.Subject"></h4>
+        <div class="space-6"></div>
+        <form>
+            <fieldset>
+                <textarea class="width-100" resize="none" placeholder="输入节的主题..."></textarea>
+            </fieldset>
+            <div class="hr hr-dotted"></div>
+            <div class="clearfix">
+                <button class="pull-right btn btn-sm btn-primary btn-white btn-round" type="button">
+                    提交
+                    <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

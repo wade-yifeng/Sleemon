@@ -1,0 +1,58 @@
+﻿@model Sleemon.Data.LearningCourseDetailModel
+
+<div class="notice_edit col-xs-12 col-sm-8">
+    <div class="widget-box">
+        <div class="widget-header">
+            <h4 class="widget-title">课程详细 - @Model.Subject</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main">
+                <h4>基本信息</h4>
+                <div>
+                    <label>课程名称：</label>
+                    @Html.DisplayFor(u => u.Subject)
+                </div>
+                <div>
+                    <label>描述：</label>
+                    @Html.DisplayFor(u => u.Description)
+                </div>
+                <div>
+                    <label>难度：</label>
+                    @Html.DisplayFor(u => u.Star)
+                </div>
+                <div>
+                    <label>适合等级：</label>
+                    @Html.DisplayFor(u => u.ForLevel)
+                </div>
+                @if (Model != null && Model.Chapters != null)
+                {
+                    <div>
+                        <h4>章节</h4>
+                        @for (int i = 0; i < Model.Chapters.Count; i++)
+                        {
+                            var chapter = Model.Chapters[i];
+                            <div>
+                                第@(i + 1)章、
+                                @Html.DisplayFor(u => chapter.Title)
+                            </div>
+                            if (chapter.Files != null)
+                            {
+                                for (int j = 0; j < chapter.Files.Count; j++)
+                                {
+                                    var file = chapter.Files[j];
+                                    <div>
+                                        第@(j + 1)节、
+                                        @Html.DisplayFor(u => file.Subject)
+                                        @Html.DisplayFor(u => file.Description)
+                                    </div>
+                                }
+                            }
+                            <br />
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

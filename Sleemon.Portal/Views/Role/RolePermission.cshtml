@@ -1,0 +1,138 @@
+﻿<div class="panel panel-default">
+    <div class="panel-body">
+        <label class="control-label">角色：</label>
+        <input type="text" class="form-control" name="roleName_edit" id="roleName_edit" value="@ViewBag.RoleName" maxlength="50" />
+        <input type="hidden" name="roleId_edit" id="roleId_edit" value="@ViewBag.RoleId" />
+        <input type="hidden" name="rolePermissions_edit" id="rolePermissions_edit" value="@ViewBag.RolePermissions" />
+    </div>
+    <div id="rolePermissionDiv" >
+     
+    </div>
+    <button type="button" class="btn btn-primary" onclick="update()">
+        确定
+    </button>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //加载用户权限     
+        var LoadPermission = function (userPermission) {
+            var divPermission = $("#rolePermissionDiv");
+            $.ajax({
+                type: "GET",
+                url: "/Role/GetPermissionByParentId",
+                cache: false,
+                data: { parentid: 0 },
+                success: function (data) {
+                    divPermission.empty();
+                    divPermission.css("background-color", "transparent");
+                    var groupItems = data;
+                    for (var k = 0; k < groupItems.length; k++) {
+                        var divGroup = $("<div/>");
+                        var fieldSetGroup = $("<fieldset/>");
+                        var legendGroup = $("<legend/>");
+                        fieldSetGroup.append(legendGroup);
+                        var chkGroup = $("<input class=checkGroup type=checkbox />");
+                        chkGroup.css("margin-left", "10px");
+                        chkGroup.attr("value", groupItems[k].Id);
+                        legendGroup.append(chkGroup).append( groupItems[k].Name);
+                        divGroup.append(fieldSetGroup);
+                        divPermission.append(divGroup);
+                        //加载子权限
+                        LoadChildPermission(groupItems[k].Id, fieldSetGroup);
+
+                        //全选/取消 
+                        chkGroup.unbind('click').click(function () {
+                            if ($(this).prop('checked')) {
+                                $(this).parent().parent().find('input.checkRank').prop("checked", true);
+                                
+                            }
+                            else {
+                                $(this).parent().parent().find('input.checkRank').prop("checked", false);
+                            }
+                        });
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        };
+        var LoadChildPermission = function (parentid,fieldSetGroup) {
+            $.ajax({
+                type: "GET",
+                url: "/Role/GetAllPermissionByParentId",
+                cache: false,
+                data: { parentid: parentid },
+                success: function (data) {
+                    var items = data;
+                        if (items == null) return;
+                        for (var i = 0; i < items.length; i++) {
+                            var v = $("<div/>");
+                            var vCheck = $('<input class=checkRank type=checkbox />');
+                            var vSpan = $('<span />');
+                            vCheck.attr("value",items[i].Id);
+                            vSpan.html(items[i].Name);
+                            v.append(vCheck).append(vSpan);
+                            v.css("height", "30px").css("width", "150px").css("margin", "10px").css("float", "left");
+                            vCheck.css("margin-left", "10px");
+                            fieldSetGroup.append(v);
+                        }
+                //设置用户已有权限选中
+                 SetRolePermission($("#rolePermissions_edit").val());
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        };
+        var SetRolePermission = function (permissions) {
+            debugger;
+            $("input.checkRank").each(function () {
+                if (permissions.indexOf(',' + $(this).val() + ',') >= 0) {
+                    $(this).prop('checked', true);
+                }
+            })
+        };
+
+        LoadPermission();
+       
+     })
+    var GetSelectedPermissions = function () {
+        var arrayObj = new Array();
+        $("input.checkRank").each(function () {
+            if ($(this).prop('checked')) {
+                //有子权限 必须赋予赋权限
+                var parentid = $(this).parent().parent().find('input.checkGroup').val();
+                if (!ExistInArray(arrayObj, parentid)) {
+                    arrayObj.push(parentid);
+                }
+                //放入子权限
+                arrayObj.push($(this).val());
+                
+            }
+        })
+        return arrayObj.join(',');
+    };
+    var ExistInArray = function (arrayObj, val) {
+        for (var i = 0; i < arrayObj.length; i++) {
+            if (arrayObj[i] === val) {
+                return true;
+            }
+        }
+    };
+    var update= function() {
+        $.ajax({
+            type: "Post",
+            url: "/Role/UpdateRole",
+            data: { roleid: $("#roleId_edit").val(), roleName: $("#roleName_edit").val(), permissions: GetSelectedPermissions() },
+            cache: false,
+            success: function (data) {
+                alert(data.Message);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+</script>

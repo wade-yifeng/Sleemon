@@ -1,0 +1,281 @@
+﻿@model  IList<Sleemon.Data.TaskListModel>
+<div class="panel panel-default">
+<div class="panel-body">
+    <div class="container">
+        <div class="row">
+            <section>
+                <form id="storePatrolListForm">
+                    <div class="col-lg-10 col-lg-offset-0">
+                        <div class="form-group">
+                            <label class="col-lg-1 control-label">名称：</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control" name="taskTitle" id="taskTitle" value="@ViewBag.taskTitle">
+                            </div>
+                            <label class="col-lg-1 control-label">日期：</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control" name="startFrom" id="startFrom" value="@ViewBag.startFrom">
+                            </div>
+                            <label class="col-lg-1 control-label">- -</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control" name="endTo" id="endTo" value="@ViewBag.endTo">
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="search()">查 询</button>
+                        </div>
+                        <input type="hidden" name="pageIndex" id="pageIndex" value="@ViewBag.pageIndex" />
+                        <input type="hidden" name="pageSize" id="pageSize" value="15" />
+                    </div>
+                </form>
+            </section>
+            <div class="col-lg-2 col-lg-offset-0">
+                <button type="button" class="btn btn-primary" onclick="create()">创 建</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@if (Model != null && Model.Count > 0)
+{
+    <input type="hidden" name="totalCount" id="totalCount" value="@Model[0].TotalCount" />
+    <table class="table">
+        <caption>巡店任务列表</caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>任务名</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>任务得分</th>
+                <th>延期得分</th>
+                <th>任务状态</th>
+                <th>任务描述</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        var task = Model[i];
+        string endto = Model[i].EndTo == null ? "" : Model[i].EndTo.Value.ToShortDateString();
+        int xh = (i + 1) + ((int)ViewBag.pageIndex - 1) * 15;
+        <tr>
+            <td>@xh</td>
+            <td>@task.Title</td>
+            <td>@task.StartFrom.ToShortDateString()</td>
+            <td>@endto</td>
+            <td>@task.Point</td>
+            <td>@task.OverduePoint</td>
+            <td>@Sleemon.Common.EnumHelper.GetEnumDescription((Sleemon.Common.ActionCategory)task.Status)</td>
+            <td>@task.Description</td>
+            <td>
+                @if (task.LastUpdateUser == ViewBag.CurrentUserId.ToString() && task.Status == (byte)Sleemon.Common.ActionCategory.Save)
+{
+                    <a data-toggle="modal" href="#" onclick="openPushDialog(@task.TaskId)">发布</a>
+                    <a data-toggle="modal" href="#" onclick="edit(@task.TaskId)">编辑</a>
+                    <a data-toggle="modal" href="#" onclick="deleteByid(@task.TaskId)">删除</a>
+                }
+            </td>
+        </tr>
+    }
+            }
+
+        </tbody>
+    </table>
+    <div id="divPager"></div>
+}
+else
+{
+    <input type="hidden" name="totalCount" id="totalCount" value="0" />
+   
+}
+<div class="modal fade" id="pushStorePatrol" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    发布巡店任务
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                        <input type="hidden" id="txtTaskId" />
+                        <label style="width:100px;">场景：</label>
+                        @{
+    if (@ViewBag.Scences != null)
+    {
+        foreach (var scence in @ViewBag.Scences)
+        {
+            <input type="checkbox" class="chkScences" value="@scence.SceneId" /> @scence.SceneName
+                                }
+                            }
+                        }
+                    <br />
+                    <label style="width:100px;">接收用户：</label>
+                        <input type="checkbox" class="chkUsers" value="4108230" />吕艳
+                    <input type="checkbox" class="chkUsers" value="4108244" />吴玲玲
+                   
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" class="btn btn-primary" onclick="pushStorePatrol()">
+                    发布
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+<script type="text/javascript" language="javascript">
+    function search() {
+        $.ajax({
+            type: "GET",
+            url: "/StorePatrol/GetStorePatrolList",
+            cache: false,
+            data: $("#storePatrolListForm").serialize(),
+            success: function(data) {
+                $(".col-content").html(data);
+            },
+            error: function(err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function create() {
+        $.ajax({
+            type: "Get",
+            url: "/StorePatrol/StorePatrolEdit",
+            data: "",
+            cache: false,
+            success: function (data) {
+                $(".col-content").html(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+    function edit(taskid) {
+        $.ajax({
+            type: "Get",
+            url: "/StorePatrol/StorePatrolEdit",
+            data: {taskid:taskid},
+            cache: false,
+            success: function (data) {
+                $(".col-content").html(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+    function deleteByid(taskid) {
+        if(confirm("确定要删除吗？"))
+        {
+            $.ajax({
+                type: "Post",
+                url: "/StorePatrol/DeleteStorePatrol",
+                data: {taskid:taskid},
+                cache: false,
+                success: function (data) {
+                    if (data.IsSuccess) {
+                        alert("删除成功！");
+                        search();
+                    }
+                    else {
+                        alert("删除失败！");
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    }
+    function openPushDialog(taskid){
+        $("#txtTaskId").val(taskid);
+        $("#pushStorePatrol").modal('show');
+    }
+    function pushStorePatrol(){
+        var taskid= $("#txtTaskId").val();
+        var scences=getSelectedScences();
+        var users=getSelectedUsers();
+        $.ajax({
+            type: "Post",
+            url: "/StorePatrol/PublishStorePatrol",
+            data: {taskid:taskid,scences:scences,users:users},
+            cache: false,
+            success: function (data) {
+                if (data.IsSuccess) {
+                    alert("发布成功！");
+                    $("#pushStorePatrol").modal('hide');
+                }
+                else {
+                    alert("发布失败！");
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+    $("#startFrom").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    $("#endTo").datepicker({
+        format: 'yyyy/mm/dd'
+    });
+    function getSelectedScences(){
+        var arrayObj = new Array();
+        $("input.chkScences").each(function () {
+            if ($(this).prop('checked')) {
+                arrayObj.push($(this).val());
+            }
+        });
+        return arrayObj.join(',');
+    }
+    function getSelectedUsers(){
+        var arrayObj = new Array();
+        $("input.chkUsers").each(function () {
+            if ($(this).prop('checked')) {
+                arrayObj.push($(this).val());
+            }
+        });
+        return arrayObj.join(',');
+    }
+    //分页
+    var options = {
+        bootstrapMajorVersion: 2, //版本
+        currentPage: $("#pageIndex").val(), //当前页数
+        totalPages: $("#totalCount").val() % $("#pageSize").val() == 0 ? $("#totalCount").val() / $("#pageSize").val() : ($("#totalCount").val() / $("#pageSize").val()) + 1, //总页数
+        itemTexts: function (type, page, current) {
+            switch (type) {
+                case "first":
+                    return "首页";
+                case "prev":
+                    return "上一页";
+                case "next":
+                    return "下一页";
+                case "last":
+                    return "末页";
+                case "page":
+                    return page;
+            }
+        },
+        onPageClicked: function (event, originalEvent, type, page) {
+            $("#pageIndex").val(page);
+            search();
+        }
+    }
+
+    $('#divPager').bootstrapPaginator(options);
+    </script>
